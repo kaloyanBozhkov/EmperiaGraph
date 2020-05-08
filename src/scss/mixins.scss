@@ -1,0 +1,23 @@
+
+@mixin animate($animationName, $duration, $delay: 0s, $fillMode: forwards) {
+    animation-name: $animationName;
+    animation-duration: $duration;
+    animation-fill-mode: $fillMode;
+    animation-delay: $delay;
+  
+    -webkit-animation-name: $animationName;
+    -webkit-animation-duration: $duration;
+    -webkit-animation-fill-mode: $fillMode;
+    -webkit-animation-delay: $delay;
+  
+    -moz-animation-name: $animationName;
+    -moz-animation-duration: $duration;
+    -moz-animation-fill-mode: $fillMode;
+    -moz-animation-delay: $delay;
+  
+    -o-animation-name: $animationName;
+    -o-animation-duration: $duration;
+    -o-animation-fill-mode: $fillMode;
+    -o-animation-delay: $delay;
+  }
+  

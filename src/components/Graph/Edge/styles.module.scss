@@ -1,0 +1,11 @@
+.edge {
+  stroke: rgba(0, 0, 0, 0.1);
+  &[selected] {
+    stroke: rgb(144, 144, 144);
+    cursor: pointer;
+
+    &:hover {
+      stroke: rgb(0, 0, 0);
+    }
+  }
+}
