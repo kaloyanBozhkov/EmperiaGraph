@@ -160,7 +160,7 @@ const Graph = ({
       console.log('edge.label', edge.label)
       console.log('selectedVertex', selectedVertex)
       // if edge hovered is from or to the selected vertex, then take it into consideration for z-index fix
-      if (edge.source.id == selectedVertex || +edge.target.id == selectedVertex) {
+      if (edge.source.id === selectedVertex || +edge.target.id === selectedVertex) {
         console.log(edge)
         const lines = d3.select(edgesRef.current).selectAll('line')
         lines.sort((a, b) => (a.id === edge.id ? 1 : -1))
