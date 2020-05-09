@@ -12,6 +12,26 @@ const defaultConfig = {
   height: 1000,
 }
 
+// const zoomFitter = (config,paddingPercent, transitionDuration) => {
+// 	var bounds = root.node().getBBox();
+// 	var parent = root.node().parentElement;
+// 	var fullWidth = parent.clientWidth,
+// 	    fullHeight = parent.clientHeight;
+// 	var width = bounds.width,
+// 	    height = bounds.height;
+// 	var midX = bounds.x + width / 2,
+// 	    midY = bounds.y + height / 2;
+// 	if (width == 0 || height == 0) return; // nothing to fit
+// 	var scale = (paddingPercent || 0.75) / Math.max(width / fullWidth, height / fullHeight);
+// 	var translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+
+// 	console.trace("zoomFit", translate, scale);
+// 	root
+// 		.transition()
+// 		.duration(transitionDuration || 0) // milliseconds
+// 		.call(zoom.translate(translate).scale(scale).event);
+// }
+
 const dragger = (simulation) => {
   const dragstarted = (d) => {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart()
@@ -33,10 +53,8 @@ const dragger = (simulation) => {
   return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
 }
 
-const updateEdges = (edgesGroup, edgesDatum, selectedVertex) => {
-  d3.select(edgesGroup)
-    .selectAll('line')
-    .data(edgesDatum)
+const updateEdges = (lines, circles, texts, selectedVertex, simulation, verticesGroup) => {
+  lines
     .attr('stroke-width', (d) => {
       // if edge starting from selected vertex, set its weight
       if (d.source.id === selectedVertex) {
@@ -59,14 +77,52 @@ const updateEdges = (edgesGroup, edgesDatum, selectedVertex) => {
     .attr('y1', (d) => d.source.y)
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y)
+    .on('mouseenter', (d) => {
+      if (selectedVertex === d.source.id || d.target.id === selectedVertex) {
+        simulation.stop()
+
+        circles.attr('r', (circleD) => {
+          if (circleD.id === d.source.id || circleD.id === d.target.id) {
+            return '15'
+          }
+
+          return '5'
+        })
+
+        texts.attr('edge-hovered', (textD) => {
+          if (textD.id === d.source.id || textD.id === d.target.id) {
+            return 'true'
+          }
+
+          return null
+        })
+      }
+    })
+    .on('mouseover', (d) => {
+      if (selectedVertex === d.source.id || d.target.id === selectedVertex) {
+        lines.sort((a, b) => (selectedVertex === d.source.id && a.id === d.id ? 1 : -1)) // make the hovered line appear on top of all other lines
+      }
+    })
+    .on('mouseleave', (d) => {
+      if (selectedVertex === d.source.id || d.target.id === selectedVertex) {
+        simulation.restart()
+
+        circles.attr('r', (circleD) => {
+          if (circleD.id === selectedVertex) {
+            return '10'
+          }
+
+          return '5'
+        })
+
+        texts.attr('edge-hovered', null)
+      }
+    })
+    .on('click', (d) => console.log(d))
 }
 
-const updateVertices = (verticesGroup, verticesDatum, selectedVertex, connections) => {
-  const verticesG = d3.select(verticesGroup)
-
-  verticesG
-    .selectAll('circle')
-    .data(verticesDatum)
+const updateVertices = (circles, texts, selectedVertex, connections) => {
+  circles
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
     .style('opacity', (d) => {
@@ -81,9 +137,7 @@ const updateVertices = (verticesGroup, verticesDatum, selectedVertex, connection
       return 0.45
     })
 
-  verticesG
-    .selectAll('text')
-    .data(verticesDatum)
+  texts
     .attr('selected', (d) => (d.id === selectedVertex ? true : undefined))
     .attr('x', function (d) {
       return d.x - this.getBBox().width / 2
@@ -130,6 +184,12 @@ const Graph = ({
     )
     .force('charge', d3.forceManyBody().strength(-100))
     .force('center', d3.forceCenter(canvasConfig.width / 2, canvasConfig.height / 2))
+    .force(
+      'collision',
+      d3.forceCollide().radius(function (d) {
+        return d.radius
+      })
+    )
 
   // on mount set drag handler to vertices and the callback for simulation's tick to update positions of vertices and edges
   useEffect(() => {
@@ -137,8 +197,13 @@ const Graph = ({
       d3.select(verticesRef.current).selectAll('circle').call(dragger(simulation))
 
       simulation.on('tick', () => {
-        updateEdges(edgesRef.current, edges, selectedVertex)
-        updateVertices(verticesRef.current, vertices, selectedVertex, connections)
+        const verticesG = d3.select(verticesRef.current)
+        const circles = verticesG.selectAll('circle').data(vertices)
+        const texts = verticesG.selectAll('text').data(vertices)
+        const lines = d3.select(edgesRef.current).selectAll('line').data(edges)
+
+        updateEdges(lines, circles, texts, selectedVertex, simulation, verticesRef.current)
+        updateVertices(circles, texts, selectedVertex, connections)
       })
 
       return () => simulation.stop()
@@ -153,37 +218,12 @@ const Graph = ({
     }
   }
 
-  const edgeHoverZindexFix = useCallback(
-    (edge) => {
-      console.log('edge.source.id', edge.source.id)
-      console.log('edge.target.id', edge.target.id)
-      console.log('edge.label', edge.label)
-      console.log('selectedVertex', selectedVertex)
-      // if edge hovered is from or to the selected vertex, then take it into consideration for z-index fix
-      if (edge.source.id === selectedVertex || +edge.target.id === selectedVertex) {
-        console.log(edge)
-        const lines = d3.select(edgesRef.current).selectAll('line')
-        lines.sort((a, b) => (a.id === edge.id ? 1 : -1))
-      }
-    },
-    [selectedVertex]
-  )
-
-  // .on(
-  //   'mouseover',
-  //   (d) => lines.sort((a, b) => (selectedVertex === d.source.id && a.id === d.id ? 1 : -1)) // make the hovered line appear on top of all other lines
-  // )
-  // .on('click', (d) => console.log(d))
   return (
     <div className={styles.graph}>
       <Canvas canvasConfig={canvasConfig}>
         <g ref={edgesRef} stroke="#999" strokeOpacity="0.6">
           {edges.map((edge) => (
-            <Edge
-              key={edge.id}
-              onMouseOver={() => edgeHoverZindexFix(edge)}
-              onClick={() => console.log(edge)}
-            />
+            <Edge key={edge.id} />
           ))}
         </g>
 
