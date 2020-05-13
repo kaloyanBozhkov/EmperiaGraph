@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/svetkkjb/kaloyanbozhkov.com/emperia/
+    - /bin/cp * $DEPLOYPATH
