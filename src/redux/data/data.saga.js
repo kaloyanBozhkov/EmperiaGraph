@@ -1,19 +1,29 @@
-import { all, call, put, takeLatest, select } from 'redux-saga/effects'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
 
 // import * as selectors from '~/redux/selectors.saga'
 import { REQUEST_DATA_START } from './data.constants'
+import { requestDataSuccess, requestDataFail } from '~/redux/data/data.actions'
+
+import requestBuilder from '~/helpers/requestBuilder'
 
 export function* requestDataAsync() {
   try {
-  } catch (error) {}
+    const request = requestBuilder().setUrl('friends').build()
+    const response = yield request.fetchApi()
+    const data = yield response.json()
+
+    yield put(requestDataSuccess(data))
+  } catch (error) {
+    yield put(requestDataFail(error))
+  }
 }
 
 // Listner
-export function* requestDepositLimitStart() {
+export function* dataStart() {
   yield takeLatest(REQUEST_DATA_START, requestDataAsync)
 }
 
 // Export our sagas
-export function* requestSagas() {
-  yield all([call(requestDepositLimitStart)])
+export function* dataSagas() {
+  yield all([call(dataStart)])
 }

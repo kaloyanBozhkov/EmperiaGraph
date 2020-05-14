@@ -1,8 +1,8 @@
 import { all, call } from 'redux-saga/effects'
-import { requestSagas } from '~/redux/data/data.saga'
+import { dataSagas } from '~/redux/data/data.saga'
 
 function* rootSaga() {
-  yield all([requestSagas])
+  yield all([call(dataSagas)])
 }
 
 export default rootSaga

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 
 import Canvas from './Canvas/Canvas'
