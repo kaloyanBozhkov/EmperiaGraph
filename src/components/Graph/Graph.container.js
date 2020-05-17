@@ -2,7 +2,7 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 
 import Graph from './Graph'
-import { setFriend, clearFriend } from '~/redux/friend/friend.actions'
+import { clearFriend, selectFriend } from '~/redux/friend/friend.actions'
 import { createStructuredSelector } from 'reselect'
 import { getSelectedFriend } from '~/redux/friend/friend.selectors'
 
@@ -10,7 +10,7 @@ const mapStateToPropsSelector = createStructuredSelector({
   selectedFriend: getSelectedFriend,
 })
 const mapDispatchToProps = (dispatch) => ({
-  setSelectedVertex: (friend) => dispatch(setFriend(friend)),
+  setSelectedVertex: (friend) => dispatch(selectFriend(friend)),
   clearSelectedVertex: () => dispatch(clearFriend()),
 })
 

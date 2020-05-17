@@ -6,6 +6,7 @@ import styles from './styles.module.scss'
 
 import verticesData from '~/data/vertices.json'
 import edgesData from '~/data/edges.json'
+
 import formatEdges from '~/helpers/formatEdges'
 import setConnections from '~/helpers/setConnections'
 
@@ -14,6 +15,15 @@ import useWindowHeight from '~/hooks/useWindowHeight'
 
 const Main = () => {
   const graphWrapper = useRef()
+  console.log(
+    edgesData.map((edge) => {
+      return {
+        source: edge.source,
+        target: edge.target,
+        id: edge.id,
+      }
+    })
+  )
   const vertices = verticesData
   const edges = formatEdges(edgesData, vertices)
   const connections = setConnections(vertices, edges)
@@ -22,7 +32,7 @@ const Main = () => {
     height: useWindowHeight() - 68,
     width: useWindowWidth(),
   }
-  console.log(connections)
+
   return (
     <div className={styles.main} ref={graphWrapper}>
       <Graph

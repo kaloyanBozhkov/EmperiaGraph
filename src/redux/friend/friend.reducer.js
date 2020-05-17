@@ -11,7 +11,7 @@ const clearFriend = (state) => ({ ...state, friend: null })
 
 const selectFriend = (state, friendIndex) => ({
   ...state,
-  selectedFreind: friendIndex,
+  selectedFreind: +friendIndex,
 })
 
 const friendReducer = (state = initialState, action = {}) => {
@@ -21,7 +21,7 @@ const friendReducer = (state = initialState, action = {}) => {
     case CLEAR_FRIEND:
       return clearFriend(state)
     case SELECT_FRIEND:
-      return selectFriend(state)
+      return selectFriend(state, action.payload)
     default:
       return state
   }
