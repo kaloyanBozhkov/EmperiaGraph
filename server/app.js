@@ -31,6 +31,4 @@ app.get('/emperia/friends', (req, res) => {
 
 app.get('/emperia', (req, res) => res.send('Hello World'))
 
-// app.listen(3000)
-
-module.exports = app
+app.listen(3000)
