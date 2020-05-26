@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`tesitng header should render header component 1`] = `
+<div
+  className="header"
+>
+  <h1>
+    EmperiaGraph
+  </h1>
+  <h3>
+    v0.0.1
+  </h3>
+</div>
+`;

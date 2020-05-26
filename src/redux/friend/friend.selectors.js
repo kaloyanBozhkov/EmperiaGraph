@@ -3,10 +3,9 @@ import { createSelector } from 'reselect'
 const friend = (state) => state.friendReducer
 
 export const getSelectedFriend = createSelector([friend], (friendReducer) => {
-  if (!friendReducer.selectedFriend) {
+  if (!friendReducer.selectedFreind) {
     return null
   }
-  const selectedFriend = friendReducer.friend[friendReducer.selectedFriend]
 
-  return selectedFriend || null
+  return friendReducer.friends[friendReducer.selectedFriend] || null
 })

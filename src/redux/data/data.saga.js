@@ -5,6 +5,7 @@ import { REQUEST_DATA_START } from './data.constants'
 import { requestDataSuccess, requestDataFail } from '~/redux/data/data.actions'
 
 import requestBuilder from '~/helpers/requestBuilder'
+import { setFriends } from '../friend/friend.actions'
 
 export function* requestDataAsync() {
   try {
@@ -13,6 +14,7 @@ export function* requestDataAsync() {
     const data = yield response.json()
 
     yield put(requestDataSuccess(data))
+    yield put(setFriends(data))
   } catch (error) {
     yield put(requestDataFail(error))
   }
