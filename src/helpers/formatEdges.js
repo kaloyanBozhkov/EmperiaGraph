@@ -22,9 +22,7 @@ const formatEdges = (edges, vertices) =>
       return edge
     }
 
-    const weight = Math.sqrt(
-      (totalEmperiaMembers * 100) / sourceVertex.totalFacebookFriends
-    ).toFixed(2)
+    const weight = Math.sqrt((totalEmperiaMembers * 100) / sourceVertex.totalFriends).toFixed(2)
 
     return {
       ...edge,

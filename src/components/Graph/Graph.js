@@ -171,6 +171,8 @@ const Graph = ({
   setSelectedVertex,
   clearSelectedVertex,
 }) => {
+  console.log('selectedVertex', selectedVertex)
+
   const edgesRef = useRef()
   const verticesRef = useRef()
   const simulation = d3

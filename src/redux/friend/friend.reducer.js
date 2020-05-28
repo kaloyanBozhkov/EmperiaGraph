@@ -1,19 +1,19 @@
 import { SET_FRIEND, CLEAR_FRIEND, SELECT_FRIEND, SET_FRIENDS } from './friend.constants'
 
 const initialState = {
-  selectedFreind: null,
+  selectedFriend: null,
   friends: [],
 }
 
 const setFriends = (state, friends) => ({ ...state, friends })
 
-const setFried = (state, friend) => ({ ...state, freinds: [...state.friends, friend] })
+const setFriend = (state, friend) => ({ ...state, freinds: [...state.friends, friend] })
 
 const clearFriend = (state) => ({ ...state, friend: null })
 
 const selectFriend = (state, friendIndex) => ({
   ...state,
-  selectedFreind: +friendIndex,
+  selectedFriend: +friendIndex,
 })
 
 const friendReducer = (state = initialState, action = {}) => {
@@ -21,7 +21,7 @@ const friendReducer = (state = initialState, action = {}) => {
     case SET_FRIENDS:
       return setFriends(state, action.payload)
     case SET_FRIEND:
-      return setFried(state, action.payload)
+      return setFriend(state, action.payload)
     case CLEAR_FRIEND:
       return clearFriend(state)
     case SELECT_FRIEND:

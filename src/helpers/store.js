@@ -7,9 +7,9 @@ import rootSaga from '~/redux/index.sagas'
 import rootReducers from '~/redux/index.reducer'
 
 // Saga middleware
-const sageMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware()
 
-const middlewares = [sageMiddleware]
+const middlewares = [sagaMiddleware]
 
 // Run logger in dev mode only
 if (process.env.NODE_ENV === 'development') {
@@ -20,6 +20,6 @@ if (process.env.NODE_ENV === 'development') {
 export const store = createStore(rootReducers, applyMiddleware(...middlewares))
 
 // Run all our sagas
-sageMiddleware.run(rootSaga)
+sagaMiddleware.run(rootSaga)
 
 export default store
