@@ -1,4 +1,4 @@
-const apiBase = 'https://16eeb7d1-f01e-45e8-818a-0d1cd0522b05.mock.pstmn.io' //https://www.kaloyanbozhkov.com/emperia'
+const apiBase = 'https://kaloyanbozhkov.com/emperia/'
 
 // build our request object
 function requestBuilder() {
