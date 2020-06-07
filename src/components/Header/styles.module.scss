@@ -6,15 +6,16 @@
     display: flex;
     justify-content: space-between;
     height: 4rem;
-    background: linear-gradient( 45deg, darken($primary-color, 20%), $primary-color );
+    background: linear-gradient( 45deg, darken($primary-color, 20%), $primary-color);
     box-shadow: 1px 1px 6px rgba(0, 0, 0, .6);
+
     h1, h3 {
         color: white;
         display: flex;
         align-items: center;
     }
 
-    h3{
+    h3 {
         padding: 0 2rem;
     }
 

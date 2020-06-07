@@ -1,0 +1,14 @@
+@import 'variables';
+
+.menu {
+    height:100%;
+    z-index: 1;
+    background: white;
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(30deg, darken($primary-color, 20%), lighten($primary-color, 20%));
+
+
+    > p {
+        display: flex;
+    }
+}

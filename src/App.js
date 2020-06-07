@@ -7,6 +7,7 @@ import Main from '~/pages/Main'
 import BaseLayout from './templates/BaseLayout'
 
 import Header from '~/components/Header/Header'
+import MenuContainer from './components/Menu/Menu.container'
 
 function App({ onRequestFriendsData }) {
   // load friend data
@@ -16,7 +17,7 @@ function App({ onRequestFriendsData }) {
 
   return (
     <div className="App">
-      <BaseLayout Header={<Header />}>
+      <BaseLayout Header={<Header />} Menu={<MenuContainer />}>
         <Main />
       </BaseLayout>
     </div>

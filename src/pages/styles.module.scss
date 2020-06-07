@@ -2,7 +2,6 @@
 @import 'keyframes';
 
 .main {
-    opacity: 0;
     height: 100%;
     @include animate(opacityIn, 1s, .2s);
 }
