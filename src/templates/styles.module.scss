@@ -17,4 +17,9 @@
       width:20rem;
       z-index:1;
     }
+    > section { 
+      position: absolute;
+      right:0;
+      top: 4rem;
+    }
   }

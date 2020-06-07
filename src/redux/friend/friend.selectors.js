@@ -9,3 +9,7 @@ export const getFriends = createSelector([getUnformattedFriends], (friends) =>
     label: `${friend.firstName} ${friend.lastName}`,
   }))
 )
+
+export const getSelectedFriendData = createSelector([getSelectedFriend, getFriends], (selectedId, friends) => {
+  return (friends && friends[selectedId]) || null
+})

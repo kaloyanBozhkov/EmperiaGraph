@@ -8,8 +8,10 @@ import BaseLayout from './templates/BaseLayout'
 
 import Header from '~/components/Header/Header'
 import MenuContainer from './components/Menu/Menu.container'
+import { getSelectedFriendData } from './redux/friend/friend.selectors'
+import InfoWindow from './components/InfoWindow/InfoWindow'
 
-function App({ onRequestFriendsData }) {
+function App({ onRequestFriendsData, selectedFriendData }) {
   // load friend data
   useEffect(() => {
     onRequestFriendsData()
@@ -17,7 +19,15 @@ function App({ onRequestFriendsData }) {
 
   return (
     <div className="App">
-      <BaseLayout Header={<Header />} Menu={<MenuContainer />}>
+      <BaseLayout 
+        Header={<Header />} 
+        Menu={<MenuContainer />} 
+        InfoWindow={selectedFriendData && (
+        <InfoWindow 
+          {...selectedFriendData}
+          emperiaFriends={100}
+        />)}
+      >
         <Main />
       </BaseLayout>
     </div>
@@ -26,6 +36,8 @@ function App({ onRequestFriendsData }) {
 
 const mapStateToProps = (state) => ({
   loadingFriendData: state.dataReducer.isPending,
+  selectedFriend: state.friendReducer.friends,
+  selectedFriendData: getSelectedFriendData(state)
 })
 
 const mapDispatchToProps = (dispatch) => ({
