@@ -1,8 +1,9 @@
-import { SET_FRIEND, CLEAR_FRIEND, SELECT_FRIEND, SET_FRIENDS } from './friend.constants'
+import { SET_FRIEND, CLEAR_FRIEND, SELECT_FRIEND, SET_FRIENDS, SET_FORMATTED_CONNECTIONS } from './friend.constants'
 
 const initialState = {
   selectedFriend: null,
   friends: [],
+  connections: []
 }
 
 const setFriends = (state, friends) => ({ ...state, friends })
@@ -16,6 +17,11 @@ const selectFriend = (state, friendIndex) => ({
   selectedFriend: +friendIndex,
 })
 
+const setFormattedConnections = (state, connections) => ({
+  ...state,
+  connections
+})
+
 const friendReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case SET_FRIENDS:
@@ -26,6 +32,9 @@ const friendReducer = (state = initialState, action = {}) => {
       return clearFriend(state)
     case SELECT_FRIEND:
       return selectFriend(state, action.payload)
+    case SET_FORMATTED_CONNECTIONS:
+      return setFormattedConnections(state, action.payload)
+
     default:
       return state
   }

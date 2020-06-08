@@ -29,6 +29,7 @@ const FriendList = ({ selectedFriend, friends = [], onSelect = f=>f}) => {
                 undefined
               }
               onClick={() => onSelect(id === selectedFriend ? null : id)}
+              key={id}
             >
               <p>{firstName}</p>
               <p>{lastName}</p>

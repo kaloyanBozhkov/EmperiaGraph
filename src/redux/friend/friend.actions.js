@@ -1,4 +1,4 @@
-import { SET_FRIEND, CLEAR_FRIEND, SELECT_FRIEND, SET_FRIENDS } from './friend.constants'
+import { SET_FRIEND, CLEAR_FRIEND, SELECT_FRIEND, SET_FRIENDS, SET_FORMATTED_CONNECTIONS } from './friend.constants'
 
 export const setFriends = (friends) => ({
   type: SET_FRIENDS,
@@ -17,4 +17,9 @@ export const selectFriend = (selectedFriend) => ({
 
 export const clearFriend = () => ({
   type: CLEAR_FRIEND,
+})
+
+export const setFormattedConnections = (connections) => ({
+  type: SET_FORMATTED_CONNECTIONS,
+  payload: connections
 })
