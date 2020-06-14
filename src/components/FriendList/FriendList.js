@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import styles from './styles.module.scss'
 
-const FriendList = ({ selectedFriend, friends = [], onSelect = f=>f}) => {
+const FriendList = ({ selectedFriend, friends = [], onSelect = f=>f }) => {
   const [search, setSearch] = useState('')
-  return (
+  return ( 
     <div className={styles.friendList}>
       <div className={styles.search}>
         <p>Search</p>

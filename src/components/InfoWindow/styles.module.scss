@@ -1,7 +1,47 @@
 @import 'variables';
 .infoWindow {
     width: 20rem;
-    height: 10rem;
+    height: 5rem;
     background-color: white;
     color: black;
+
+    padding: .5rem;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 1px 1px rgba(0, 0, 0, 0.3);
+
+    p {
+        text-transform: capitalize;
+        flex:1;
+        flex-basis: 100%;
+
+        &:first-of-type {
+            font-size: 1.6rem;
+            font-weight: bold;
+            position: relative;
+            
+            &::after {
+                content: '';
+                height: 2px;
+                width: 100%;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: $primary-color;
+            }
+        }
+
+        &:nth-child(2) { 
+        }
+
+        &:last-of-type {
+            flex-basis: 100%;
+        }
+    }
+
+
 }
