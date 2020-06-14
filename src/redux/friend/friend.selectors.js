@@ -2,8 +2,6 @@ import { createSelector } from 'reselect'
 
 const getUnformattedFriends = (state) => state.friendReducer.friends
 
-export const getFormattedConnections = (state) => state.friendReducer.connections
-
 export const getSelectedFriend = (state) => state.friendReducer.selectedFriend
 
 export const getFriends = createSelector([getUnformattedFriends], (friends) =>

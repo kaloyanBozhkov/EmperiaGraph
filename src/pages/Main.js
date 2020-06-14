@@ -1,24 +1,20 @@
-import React, { useRef, useEffect, useMemo } from 'react'
+import React, { useRef } from 'react'
 
 import Graph from '~/components/Graph/Graph'
 
 import styles from './styles.module.scss'
 
-// import verticesData from '~/data/vertices.json'
-// import edgesData from '~/data/edges.json'
-
-import { getSelectedFriend, getFriends, getFormattedConnections } from '~/redux/friend/friend.selectors'
-import { getConnections } from '~/redux/connections/connections.selectors'
+import { getSelectedFriend, getFriends } from '~/redux/friend/friend.selectors'
+import { getConnections, getFormattedConnections } from '~/redux/connections/connections.selectors'
 
 import formatEdges from '~/helpers/formatEdges'
-// import setConnections from '~/helpers/setConnections'
 
 import useWindowWidth from '~/hooks/useWindowWidth'
 import useWindowHeight from '~/hooks/useWindowHeight'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
-import { selectFriend, clearFriend, setFormattedConnections } from '~/redux/friend/friend.actions'
+import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
 
 const Main = ({
   edgesData,
@@ -27,7 +23,6 @@ const Main = ({
   setSelectedVertex,
   clearSelectedVertex,
   connections,
-  onSetConnections
 }) => {
   const graphWrapper = useRef()
   const vertices = verticesData
@@ -37,11 +32,6 @@ const Main = ({
     height: useWindowHeight() - 68,
     width: useWindowWidth(),
   }
-
-  useEffect(() => {
-    // @TODO USE SELECTOR FROM CONNECTIONS INSTEAD OF SETTING IN STORE
-    onSetConnections(setConnections(vertices, edges))
-  }, [onSetConnections, edges, vertices])
 
   return (
     <div className={styles.main} ref={graphWrapper}>
@@ -67,8 +57,7 @@ const mapStateToPropsSelector = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   setSelectedVertex: (friend) => dispatch(selectFriend(friend)),
-  clearSelectedVertex: () => dispatch(clearFriend()),
-  onSetConnections: (connections) => dispatch(setFormattedConnections(connections))
+  clearSelectedVertex: () => dispatch(clearFriend())
 })
 
 export default compose(connect(mapStateToPropsSelector, mapDispatchToProps)(Main))
