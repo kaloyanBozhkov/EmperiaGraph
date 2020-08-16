@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { requestDataStart } from './redux/data/data.actions'
 
-import Main from '~/pages/Main'
+import Main from '~/containers/Main'
 import BaseLayout from './templates/BaseLayout'
 import Header from '~/components/Header/Header'
 import InfoWindow from './components/InfoWindow/InfoWindow'

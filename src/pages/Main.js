@@ -1,20 +1,12 @@
 import React, { useRef } from 'react'
 
-import Graph from '~/components/Graph/Graph'
-
 import styles from './styles.module.scss'
 
-import { getSelectedFriend, getFriends } from '~/redux/friend/friend.selectors'
-import { getConnections, getFormattedConnections } from '~/redux/connections/connections.selectors'
+import Graph from '~/components/Graph/Graph'
 
 import formatEdges from '~/helpers/formatEdges'
-
 import useWindowWidth from '~/hooks/useWindowWidth'
 import useWindowHeight from '~/hooks/useWindowHeight'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
-import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
 
 const Main = ({
   edgesData,
@@ -48,16 +40,4 @@ const Main = ({
   )
 }
 
-const mapStateToPropsSelector = createStructuredSelector({
-  selectedVertex: getSelectedFriend,
-  verticesData: getFriends,
-  edgesData: getConnections,
-  connections: getFormattedConnections
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  setSelectedVertex: (friend) => dispatch(selectFriend(friend)),
-  clearSelectedVertex: () => dispatch(clearFriend())
-})
-
-export default compose(connect(mapStateToPropsSelector, mapDispatchToProps)(Main))
+export default Main
