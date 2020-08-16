@@ -21,7 +21,7 @@ const removeConnection = (state, id) => ({
   connecitons: state.connecitons.filter((conn) => conn.id !== id),
 })
 
-const clearConnections = (state) => ({ ...state, conneciton: null })
+const clearConnections = (state) => ({ ...state, connecitons: [] })
 
 const connecitonsReducer = (state = initialState, action = {}) => {
   switch (action.type) {

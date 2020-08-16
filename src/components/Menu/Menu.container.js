@@ -1,5 +1,3 @@
-import React from 'react'
-
 import Menu from './Menu'
 import { compose } from 'redux'
 import { connect } from 'react-redux'

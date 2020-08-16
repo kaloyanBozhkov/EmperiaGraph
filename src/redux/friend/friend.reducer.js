@@ -1,4 +1,4 @@
-import { SET_FRIEND, CLEAR_FRIEND, SELECT_FRIEND, SET_FRIENDS, SET_FORMATTED_CONNECTIONS } from './friend.constants'
+import { SET_FRIEND, CLEAR_FRIEND, SELECT_FRIEND, SET_FRIENDS } from './friend.constants'
 
 const initialState = {
   selectedFriend: null,
@@ -10,7 +10,7 @@ const setFriends = (state, friends) => ({ ...state, friends })
 
 const setFriend = (state, friend) => ({ ...state, freinds: [...state.friends, friend] })
 
-const clearFriend = (state) => ({ ...state, friend: null })
+const clearFriend = (state) => ({ ...state, selectedFriend: null })
 
 const selectFriend = (state, friendIndex) => ({
   ...state,

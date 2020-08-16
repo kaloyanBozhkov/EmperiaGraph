@@ -184,7 +184,7 @@ const Graph = ({
         .distance(canvasConfig.width / 5)
         .id((d) => d.id)
     )
-    .force('charge', d3.forceManyBody().strength(-100))
+    .force('charge', d3.forceManyBody().strength(-5))
     .force('center', d3.forceCenter(canvasConfig.width / 2, canvasConfig.height / 2))
     .force(
       'collision',
