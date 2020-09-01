@@ -3,6 +3,10 @@ import { REQUEST_DATA_FAIL, REQUEST_DATA_START, REQUEST_DATA_SUCCESS } from './d
 const initState = {
   isPending: false,
   error: null,
+  data: {
+    connections: [],
+    friends: []
+  }
 }
 
 const requestDataStart = (state) => ({
@@ -16,9 +20,13 @@ const requestDataFail = (state, error) => ({
   error,
 })
 
-const requestDataSuccess = (state, response) => ({
+const requestDataSuccess = (state, { friends, connections }) => ({
   ...state,
-  isPending: true,
+  isPending: false,
+  data: {
+    friends,
+    connections
+  }
 })
 
 const dataReducer = (state = initState, action = {}) => {
@@ -26,7 +34,7 @@ const dataReducer = (state = initState, action = {}) => {
     case REQUEST_DATA_START:
       return requestDataStart(state)
     case REQUEST_DATA_SUCCESS:
-      return requestDataSuccess(state)
+      return requestDataSuccess(state, action.payload)
     case REQUEST_DATA_FAIL:
       return requestDataFail(state, action.payload)
     default:

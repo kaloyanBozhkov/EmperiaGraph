@@ -126,14 +126,14 @@ const updateVertices = (circles, texts, selectedVertex, connections) => {
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
     .style('opacity', (d) => {
-      if (
-        d.id === selectedVertex ||
-        (connections[selectedVertex] && ~connections[selectedVertex].indexOf(+d.id))
-      ) {
-        return 1
-      } else if (!selectedVertex) {
-        return null
-      }
+      // if (
+      //   d.id === selectedVertex ||
+      //   (connections[selectedVertex] && ~connections[selectedVertex].indexOf(+d.id))
+      // ) {
+      //   return 1
+      // } else if (!selectedVertex) {
+      //   return null
+      // }
       return 0.45
     })
 
@@ -150,14 +150,14 @@ const updateVertices = (circles, texts, selectedVertex, connections) => {
       return d.y + 20
     })
     .style('opacity', (d) => {
-      if (!selectedVertex) {
-        return null
-      } else if (
-        d.id === selectedVertex ||
-        (connections[selectedVertex] && ~connections[selectedVertex].indexOf(+d.id))
-      ) {
-        return 1
-      }
+      // if (!selectedVertex) {
+      //   return null
+      // } else if (
+      //   d.id === selectedVertex ||
+      //   (connections[selectedVertex] && ~connections[selectedVertex].indexOf(+d.id))
+      // ) {
+      //   return 1
+      // }
       return 0.45
     })
 }
@@ -165,14 +165,16 @@ const updateVertices = (circles, texts, selectedVertex, connections) => {
 const Graph = ({
   vertices = [],
   edges = [],
+
   connections,
+  
+  
   canvasConfig = defaultConfig,
   selectedVertex,
+  
   setSelectedVertex,
   clearSelectedVertex,
 }) => {
-  console.log('selectedVertex', selectedVertex)
-
   const edgesRef = useRef()
   const verticesRef = useRef()
   const simulation = d3

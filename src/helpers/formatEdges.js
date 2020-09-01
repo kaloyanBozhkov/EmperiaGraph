@@ -27,7 +27,8 @@ const formatEdges = (edges, vertices) =>
     return {
       ...edge,
       weight,
-      label: `${sourceVertex.label} -> ${targetVertex.label}`,
+      label: `${sourceVertex.firstName} ${sourceVertex.lastName} -> ${targetVertex.firstName} ${targetVertex.lastName}`,
     }
   })
+
 export default formatEdges
