@@ -2,6 +2,8 @@ import { createSelector } from 'reselect'
 
 const getFriends = (state) => state.friendReducer.friends
 
+export const getSelectedFriendId = (state) => state.friendReducer.selectedFriend?.id || null
+
 // get all .from of each friends[].connections, skipping repeating links
 export const selectPurifiedConnections = createSelector(
   [getFriends],

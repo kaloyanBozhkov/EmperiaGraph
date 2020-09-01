@@ -8,15 +8,15 @@ import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
 
 import withLoading from '~/hoc/withPageLoading'
 import withDispatch from '~/hoc/withDispatch'
-import { selectPurifiedConnections } from '~/redux/friend/friend.selector'
+import { selectPurifiedConnections, getSelectedFriendId } from '~/redux/friend/friend.selector'
 
 const mapStateToProps = (state) => ({
   isLoading: state.dataReducer.isPending,
   
-  selectedFriend: state.friendReducer.selectedFriend,
+  selectedFriend: getSelectedFriendId(state),
   friends: state.friendReducer.friends,
-  
-  connectionsPurified: selectPurifiedConnections(state)
+
+  connectionsPurified: selectPurifiedConnections(state),
 })
 
 

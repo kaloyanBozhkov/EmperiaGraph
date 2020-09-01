@@ -53,32 +53,33 @@ const dragger = (simulation) => {
   return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
 }
 
-const updateEdges = (lines, circles, texts, selectedVertex, simulation, verticesGroup) => {
+const updateEdges = (lines, circles, texts, selectedVertex, simulation) => {
+  const selectedVertexId = selectedVertex?.id || null
   lines
     .attr('stroke-width', (d) => {
       // if edge starting from selected vertex, set its weight
-      if (d.source.id === selectedVertex) {
+      if (d.source.id === selectedVertexId) {
         return d.weight
       }
 
       return 1
     })
     .style('opacity', (d) => {
-      if (!selectedVertex) {
+      if (!selectedVertexId) {
         return null
-      } else if (d.source.id === selectedVertex) {
+      } else if (selectedVertex?.connections?.from?.find(({ id }) => id === d.id)) {
         return 1
       }
 
       return 0.45
     })
-    .attr('selected', (d) => (d.source.id === selectedVertex ? true : undefined))
+    .attr('selected', (d) => (d.source.id === selectedVertexId ? true : undefined))
     .attr('x1', (d) => d.source.x)
     .attr('y1', (d) => d.source.y)
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y)
     .on('mouseenter', (d) => {
-      if (selectedVertex === d.source.id || d.target.id === selectedVertex) {
+      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
         simulation.stop()
 
         circles.attr('r', (circleD) => {
@@ -99,16 +100,16 @@ const updateEdges = (lines, circles, texts, selectedVertex, simulation, vertices
       }
     })
     .on('mouseover', (d) => {
-      if (selectedVertex === d.source.id || d.target.id === selectedVertex) {
-        lines.sort((a, b) => (selectedVertex === d.source.id && a.id === d.id ? 1 : -1)) // make the hovered line appear on top of all other lines
+      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
+        lines.sort((a, b) => (selectedVertexId === d.source.id && a.id === d.id ? 1 : -1)) // make the hovered line appear on top of all other lines
       }
     })
     .on('mouseleave', (d) => {
-      if (selectedVertex === d.source.id || d.target.id === selectedVertex) {
+      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
         simulation.restart()
 
         circles.attr('r', (circleD) => {
-          if (circleD.id === selectedVertex) {
+          if (circleD.id === selectedVertexId) {
             return '10'
           }
 
@@ -121,55 +122,54 @@ const updateEdges = (lines, circles, texts, selectedVertex, simulation, vertices
     .on('click', (d) => console.log(d))
 }
 
-const updateVertices = (circles, texts, selectedVertex, connections) => {
+const updateVertices = (circles, texts, selectedVertex) => {
+  const selectedVertexId = selectedVertex?.id || null
   circles
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
     .style('opacity', (d) => {
-      // if (
-      //   d.id === selectedVertex ||
-      //   (connections[selectedVertex] && ~connections[selectedVertex].indexOf(+d.id))
-      // ) {
-      //   return 1
-      // } else if (!selectedVertex) {
-      //   return null
-      // }
+      if (
+        d.id === selectedVertexId ||
+        selectedVertex?.connections?.from?.find(({ id }) => id === d.id)
+      ) {
+        return 1
+      } else if (!selectedVertexId) {
+        return null
+      }
       return 0.45
     })
 
   texts
-    .attr('selected', (d) => (d.id === selectedVertex ? true : undefined))
+    .attr('selected', (d) => (d.id === selectedVertexId ? true : undefined))
     .attr('x', function (d) {
       return d.x - this.getBBox().width / 2
     })
     .attr('y', (d) => {
-      if (d.id === selectedVertex) {
+      if (d.id === selectedVertexId) {
         return d.y - 20
       }
 
       return d.y + 20
     })
     .style('opacity', (d) => {
-      // if (!selectedVertex) {
-      //   return null
-      // } else if (
-      //   d.id === selectedVertex ||
-      //   (connections[selectedVertex] && ~connections[selectedVertex].indexOf(+d.id))
-      // ) {
-      //   return 1
-      // }
+      if (!selectedVertexId) {
+        return null
+      } else if (
+        d.id === selectedVertexId ||
+        selectedVertex?.connections?.from?.find(({ id }) => id === d.id)
+      ) {
+        return 1
+      }
       return 0.45
     })
 }
 
 const Graph = ({
+  canvasConfig = defaultConfig,
+
   vertices = [],
   edges = [],
-
-  connections,
   
-  
-  canvasConfig = defaultConfig,
   selectedVertex,
   
   setSelectedVertex,
@@ -177,6 +177,7 @@ const Graph = ({
 }) => {
   const edgesRef = useRef()
   const verticesRef = useRef()
+  const selectedVertexId = selectedVertex?.id || null
   const simulation = d3
     .forceSimulation(vertices)
     .force(
@@ -207,15 +208,15 @@ const Graph = ({
         const lines = d3.select(edgesRef.current).selectAll('line').data(edges)
 
         updateEdges(lines, circles, texts, selectedVertex, simulation, verticesRef.current)
-        updateVertices(circles, texts, selectedVertex, connections)
+        updateVertices(circles, texts, selectedVertex)
       })
 
       return () => simulation.stop()
     }
-  }, [simulation, edges, vertices, selectedVertex, connections])
+  }, [simulation, edges, vertices, selectedVertex])
 
   const vertexSelectHandler = (id) => {
-    if (selectedVertex !== id) {
+    if (selectedVertexId !== id) {
       setSelectedVertex(id)
     } else {
       clearSelectedVertex()
@@ -237,7 +238,7 @@ const Graph = ({
               key={vertex.id}
               text={vertex.label}
               sex={vertex.sex}
-              selected={selectedVertex === vertex.id}
+              selected={selectedVertexId === vertex.id}
               onClick={() => vertexSelectHandler(vertex.id)}
             />
           ))}

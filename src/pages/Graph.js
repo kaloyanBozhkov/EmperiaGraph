@@ -28,7 +28,6 @@ const Graph = ({
       <GraphComponent
         vertices={friends}
         edges={connectionsPurified}
-        // connections={connections}
         canvasConfig={canvasSize}
 
         selectedVertex={selectedFriend}
