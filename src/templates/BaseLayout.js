@@ -7,7 +7,7 @@ const BaseLayout = ({ Header, Menu, InfoWindow, children }) => {
       <header>{Header}</header>
       <nav>{Menu}</nav>
       <main>{children}</main>
-      {InfoWindow && <section>{InfoWindow}</section>}
+      {InfoWindow && <section className={styles.infoWindowWrapper}>{InfoWindow}</section>}
     </div>
   )
 }

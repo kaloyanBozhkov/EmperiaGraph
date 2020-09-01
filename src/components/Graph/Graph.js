@@ -59,6 +59,7 @@ const updateEdges = (lines, circles, texts, selectedVertex, simulation) => {
     .attr('stroke-width', (d) => {
       // if edge starting from selected vertex, set its weight
       if (d.source.id === selectedVertexId) {
+        
         return d.weight
       }
 
@@ -130,7 +131,7 @@ const updateVertices = (circles, texts, selectedVertex) => {
     .style('opacity', (d) => {
       if (
         d.id === selectedVertexId ||
-        selectedVertex?.connections?.from?.find(({ id }) => id === d.id)
+        selectedVertex?.connections?.from?.find(({ target: { id } }) => id === d.id)
       ) {
         return 1
       } else if (!selectedVertexId) {

@@ -17,9 +17,10 @@
       width:20rem;
       z-index:1;
     }
-    > section { 
+
+    .infoWindowWrapper {
       position: absolute;
-      right:0;
-      top: 4rem;
+      right:1rem;
+      top: 5rem;
     }
   }
