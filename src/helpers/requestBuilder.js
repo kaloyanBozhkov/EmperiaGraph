@@ -1,4 +1,4 @@
-const apiBase = 'https://kaloyanbozhkov.com/emperia/'
+const apiBase = 'https://kaloyanbozhkov.com/emperia'
 
 // build our request object
 function requestBuilder() {
