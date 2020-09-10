@@ -1,11 +1,13 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const connection = require('./helpers/setupConnection')
 const cors = require('cors')
 const app = express()
 
 app.use(cors())
-app.use(express.json())
-app.use(express.bodyParser())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
 
 app.get('/emperia/friends', (req, res) => {
   connection.query(
