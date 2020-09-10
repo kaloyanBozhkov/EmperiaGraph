@@ -52,6 +52,7 @@ app.get('/emperia', (req, res) =>
 app.post('/emperia/add/friend', (req, res) => {
 
   console.log(req)
+  console.log('LOVE')  
 
   // get friend data
   const friend = {
@@ -67,7 +68,7 @@ app.post('/emperia/add/friend', (req, res) => {
   // create insertion query
   connection.query(
     `INSERT INTO 
-    ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}
+    ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}
     ('firstName, 'lastName, 'totalFriends, 'sex, 'id')
     VALUES (${JSON.stringify(friend)})`,
 
