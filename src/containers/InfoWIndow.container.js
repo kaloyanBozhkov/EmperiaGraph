@@ -6,7 +6,7 @@ import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
 import Main from '~/components/InfoWindow/InfoWindow'
 
 const mapStateToProps = (state) => ({
-    selectedFriend: state.friendReducer.selectedFriend
+  selectedFriend: state.friendReducer.selectedFriend,
 })
 
 const mapDispatchToProps = (dispatch) => ({

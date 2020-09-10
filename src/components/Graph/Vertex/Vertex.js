@@ -2,7 +2,7 @@ import React from 'react'
 
 import styles from './styles.module.scss'
 
-const Vertex = ({ text, sex, selected, onClick }) => {
+const Vertex = ({ text, sex, selected, onClick, circleStyle, textStyle }) => {
   return (
     <>
       <circle
@@ -10,8 +10,9 @@ const Vertex = ({ text, sex, selected, onClick }) => {
         fill={sex === 'male' ? '#588BAE' : '#FE7F9D'}
         className={styles.vertex}
         onClick={onClick}
+        style={circleStyle}
       />
-      <text stroke="black" strokeWidth="0.1" className={styles.text}>
+      <text stroke="black" strokeWidth="0.1" className={styles.text} style={textStyle}>
         {text}
       </text>
     </>

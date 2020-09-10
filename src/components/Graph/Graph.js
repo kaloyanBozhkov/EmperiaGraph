@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useMemo } from 'react'
 import * as d3 from 'd3'
 
 import Canvas from './Canvas/Canvas'
@@ -53,116 +53,66 @@ const dragger = (simulation) => {
   return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
 }
 
-const updateEdges = (lines, circles, texts, selectedVertex, simulation) => {
-  const selectedVertexId = selectedVertex?.id || null
+const updateEdges = (lines, circles, texts, selectedVertexId, simulation) => {
   lines
-    .attr('stroke-width', (d) => {
-      // if edge starting from selected vertex, set its weight
-      if (d.source.id === selectedVertexId) {
-        
-        return d.weight
-      }
-
-      return 1
-    })
-    .style('opacity', (d) => {
-      if (!selectedVertexId) {
-        return null
-      } else if (selectedVertex?.connections?.from?.find(({ id }) => id === d.id)) {
-        return 1
-      }
-
-      return 0.45
-    })
     .attr('selected', (d) => (d.source.id === selectedVertexId ? true : undefined))
     .attr('x1', (d) => d.source.x)
     .attr('y1', (d) => d.source.y)
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y)
-    .on('mouseenter', (d) => {
-      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
-        simulation.stop()
+    // .on('mouseenter', (d) => {
+    //   if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
+    //     simulation.stop()
 
-        circles.attr('r', (circleD) => {
-          if (circleD.id === d.source.id || circleD.id === d.target.id) {
-            return '15'
-          }
+    //     circles.attr('r', (circleD) => {
+    //       if (circleD.id === d.source.id || circleD.id === d.target.id) {
+    //         return '15'
+    //       }
 
-          return '5'
-        })
+    //       return '5'
+    //     })
 
-        texts.attr('edge-hovered', (textD) => {
-          if (textD.id === d.source.id || textD.id === d.target.id) {
-            return 'true'
-          }
+    //     texts.attr('edge-hovered', (textD) => {
+    //       if (textD.id === d.source.id || textD.id === d.target.id) {
+    //         return 'true'
+    //       }
 
-          return null
-        })
-      }
-    })
-    .on('mouseover', (d) => {
-      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
-        lines.sort((a, b) => (selectedVertexId === d.source.id && a.id === d.id ? 1 : -1)) // make the hovered line appear on top of all other lines
-      }
-    })
-    .on('mouseleave', (d) => {
-      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
-        simulation.restart()
+    //       return null
+    //     })
+    //   }
+    // })
+    // .on('mouseover', (d) => {
+    //   if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
+    //     lines.sort((a, b) => (selectedVertexId === d.source.id && a.id === d.id ? 1 : -1)) // make the hovered line appear on top of all other lines
+    //   }
+    // })
+    // .on('mouseleave', (d) => {
+    //   if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
+    //     simulation.restart()
 
-        circles.attr('r', (circleD) => {
-          if (circleD.id === selectedVertexId) {
-            return '10'
-          }
+    //     circles.attr('r', (circleD) => {
+    //       if (circleD.id === selectedVertexId) {
+    //         return '10'
+    //       }
 
-          return '5'
-        })
+    //       return '5'
+    //     })
 
-        texts.attr('edge-hovered', null)
-      }
-    })
+    //     texts.attr('edge-hovered', null)
+    //   }
+    // })
     .on('click', (d) => console.log(d))
 }
 
-const updateVertices = (circles, texts, selectedVertex) => {
-  const selectedVertexId = selectedVertex?.id || null
+const updateVertices = (circles, texts, selectedVertexId) => {
   circles
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
-    .style('opacity', (d) => {
-      if (
-        d.id === selectedVertexId ||
-        selectedVertex?.connections?.from?.find(({ target: { id } }) => id === d.id)
-      ) {
-        return 1
-      } else if (!selectedVertexId) {
-        return null
-      }
-      return 0.45
-    })
 
   texts
-    .attr('selected', (d) => (d.id === selectedVertexId ? true : undefined))
-    .attr('x', function (d) {
-      return d.x - this.getBBox().width / 2
-    })
-    .attr('y', (d) => {
-      if (d.id === selectedVertexId) {
-        return d.y - 20
-      }
-
-      return d.y + 20
-    })
-    .style('opacity', (d) => {
-      if (!selectedVertexId) {
-        return null
-      } else if (
-        d.id === selectedVertexId ||
-        selectedVertex?.connections?.from?.find(({ id }) => id === d.id)
-      ) {
-        return 1
-      }
-      return 0.45
-    })
+    .attr('selected', (d) => d.id === selectedVertexId ? true : undefined)
+    .attr('x', (d) => d.x)
+    .attr('y', (d) => d.id === selectedVertexId ? d.y - 20 : d.y + 20)
 }
 
 const Graph = ({
@@ -170,36 +120,104 @@ const Graph = ({
 
   vertices = [],
   edges = [],
-  
+
   selectedVertex,
-  
+
   setSelectedVertex,
   clearSelectedVertex,
 }) => {
   const edgesRef = useRef()
   const verticesRef = useRef()
   const selectedVertexId = selectedVertex?.id || null
-  const simulation = d3
-    .forceSimulation(vertices)
-    .force(
-      'link',
-      d3
-        .forceLink(edges)
-        .distance(canvasConfig.width / 5)
-        .id((d) => d.id)
-    )
-    .force('charge', d3.forceManyBody().strength(-5))
-    .force('center', d3.forceCenter(canvasConfig.width / 2, canvasConfig.height / 2))
-    .force(
-      'collision',
-      d3.forceCollide().radius(function (d) {
-        return d.radius
-      })
-    )
+
+  const simulation = useMemo(() => {
+    if (edges && vertices) {
+      return (
+        d3
+          .forceSimulation(vertices)
+          .force(
+            'link',
+            d3
+              .forceLink(edges)
+              .distance(canvasConfig.width / 5)
+              .id((d) => d.id)
+          )
+          .force('charge', d3.forceManyBody().strength(-5))
+          .force('center', d3.forceCenter(canvasConfig.width / 2, canvasConfig.height / 2))
+          .force(
+            'collision',
+            d3.forceCollide().radius((d) => d.radius)
+          )
+      )
+    }
+
+    return null
+  }, [canvasConfig, edges, vertices])
+
+
+  const verticesNodes = useMemo(() => {
+    if (!simulation) { return null }
+
+    const vertexSelectHandler = (id) => {
+      if (selectedVertexId !== id) {
+        setSelectedVertex(id)
+      } else {
+        clearSelectedVertex()
+      }
+    }
+
+    return simulation.nodes().map((vertex) => {
+
+      const opacity = !selectedVertexId ? null : (
+        vertex.id === selectedVertexId || selectedVertex?.connections?.from?.find(({ target: { id } }) => id === vertex.id) ?
+          1 : .45
+      )
+
+      return (
+        <Vertex
+          key={vertex.id}
+          text={vertex.label}
+          sex={vertex.sex}
+          selected={selectedVertexId === vertex.id}
+          circleStyle={{
+            opacity
+          }}
+          textStyle={{
+            opacity
+          }}
+          onClick={() => vertexSelectHandler(vertex.id)}
+        />
+      )
+    })
+  }, [selectedVertex, selectedVertexId, setSelectedVertex, clearSelectedVertex, simulation])
+
+
+  const edgesNodes = useMemo(() => {
+
+    return edges.map((edge) => {
+
+      // if edge starting from selected vertex, set its weight
+      const strokeWidth = edge.source.id === selectedVertexId ? edge.weight : 1
+
+      const opacity = !selectedVertexId ? null : (
+        (selectedVertex?.connections?.from?.find(({ id }) => id === edge.id)) ? 1 : .45
+      )
+
+      return (
+        <Edge
+          key={edge.id}
+          style={{
+            strokeWidth,
+            opacity
+          }}
+        />
+      )
+    })
+  }, [edges, selectedVertex, selectedVertexId])
 
   // on mount set drag handler to vertices and the callback for simulation's tick to update positions of vertices and edges
   useEffect(() => {
-    if (edgesRef.current && verticesRef.current) {
+    if (edgesRef.current && verticesRef.current && simulation) {
       d3.select(verticesRef.current).selectAll('circle').call(dragger(simulation))
 
       simulation.on('tick', () => {
@@ -208,41 +226,22 @@ const Graph = ({
         const texts = verticesG.selectAll('text').data(vertices)
         const lines = d3.select(edgesRef.current).selectAll('line').data(edges)
 
-        updateEdges(lines, circles, texts, selectedVertex, simulation, verticesRef.current)
-        updateVertices(circles, texts, selectedVertex)
+        updateEdges(lines, circles, texts, selectedVertexId, simulation, verticesRef.current)
+        updateVertices(circles, texts, selectedVertexId)
       })
 
       return () => simulation.stop()
     }
   }, [simulation, edges, vertices, selectedVertex])
 
-  const vertexSelectHandler = (id) => {
-    if (selectedVertexId !== id) {
-      setSelectedVertex(id)
-    } else {
-      clearSelectedVertex()
-    }
-  }
-
   return (
     <div className={styles.graph}>
       <Canvas canvasConfig={canvasConfig}>
         <g ref={edgesRef} stroke="#999" strokeOpacity="0.6">
-          {edges.map((edge) => (
-            <Edge key={edge.id} />
-          ))}
+          {edgesNodes}
         </g>
-
         <g ref={verticesRef} stroke="#fff" strokeWidth="1.5">
-          {simulation.nodes().map((vertex) => (
-            <Vertex
-              key={vertex.id}
-              text={vertex.label}
-              sex={vertex.sex}
-              selected={selectedVertexId === vertex.id}
-              onClick={() => vertexSelectHandler(vertex.id)}
-            />
-          ))}
+          {verticesNodes}
         </g>
       </Canvas>
     </div>
