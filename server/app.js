@@ -52,7 +52,7 @@ app.get('/emperia', (req, res) =>
 app.post('/emperia/add/friend', (req, res) => {
 
   console.log(req)
-  console.log('LOVE')  
+  console.log('LOVE')
 
   // get friend data
   const friend = {
@@ -64,6 +64,11 @@ app.post('/emperia/add/friend', (req, res) => {
         return `${this.firstName}, ${this.lastName}, ${this.totalFriends}, ${this.sex}`
     }
   }
+  write(JSON.stringify(req))
+  write(`INSERT INTO 
+  ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}
+  ('firstName, 'lastName, 'totalFriends, 'sex, 'id')
+  VALUES (${JSON.stringify(friend)})`)
 
   // create insertion query
   connection.query(
@@ -86,3 +91,17 @@ app.post('/emperia/add/friend', (req, res) => {
 })
 
 app.listen(3000)
+
+
+// Requiring fs module in which 
+// writeFile function is defined. 
+const fs = require('fs') 
+  
+// Data which will write in a file. 
+  
+// Write data in 'Output.txt' . 
+const write = (data) => fs.writeFile(`koko-logger-${new Date().toISOString()}.txt`, data, (err) => { 
+      
+    // In case of a error throw err. 
+    if (err) throw err; 
+}) 
