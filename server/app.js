@@ -3,7 +3,6 @@ const bodyParser = require('body-parser')
 const connection = require('./helpers/setupConnection')
 const cors = require('cors')
 const app = express()
-
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -55,23 +54,19 @@ app.post('/emperia/add/friend', (req, res) => {
     firstName: 'Tisho',
     lastName: 'isDope',
     totalFriends: 400,
-    sex: 'Male',
-    toJSON: function () {
-        return `${this.firstName}, ${this.lastName}, ${this.totalFriends}, ${this.sex}`
-    }
+    sex: 'Male'
   }
-  write(JSON.stringify(req))
-  write(`INSERT INTO 
+  console.log(`INSERT INTO 
   ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}
   ('firstName, 'lastName, 'totalFriends, 'sex, 'id')
-  VALUES (${JSON.stringify(friend)})`)
+  VALUES (${friend.firstName}, ${friend.lastName}, ${friend.totalFriends}, ${friend.sex})`)
 
   // create insertion query
   connection.query(
     `INSERT INTO 
     ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}
     ('firstName, 'lastName, 'totalFriends, 'sex, 'id')
-    VALUES (${JSON.stringify(friend)})`,
+    VALUES (${friend.firstName}, ${friend.lastName}, ${friend.totalFriends}, ${friend.sex})`,
 
     (err, results, fields) => {
       if (err) {
@@ -88,16 +83,3 @@ app.post('/emperia/add/friend', (req, res) => {
 
 app.listen(3000)
 
-
-// Requiring fs module in which 
-// writeFile function is defined. 
-const fs = require('fs') 
-  
-// Data which will write in a file. 
-  
-// Write data in 'Output.txt' . 
-const write = (data) => fs.writeFile(`koko-logger-${new Date().toISOString()}.txt`, data, (err) => { 
-      
-    // In case of a error throw err. 
-    if (err) throw err; 
-}) 
