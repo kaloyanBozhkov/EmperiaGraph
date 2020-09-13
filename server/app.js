@@ -52,7 +52,7 @@ app.post('/emperia/add/friend', (req, res) => {
   const sqlQuery = `INSERT INTO 
   ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}
   ('firstName','lastName', 'totalFriends', 'sex', 'id')
-  VALUES (${friend.firstName}, ${friend.lastName}, ${friend.totalFriends}, ${friend.sex})`
+  VALUES ('${friend.firstName}', '${friend.lastName}', '${friend.totalFriends}', '${friend.sex}')`
   
   // create insertion query
   connection.query(
