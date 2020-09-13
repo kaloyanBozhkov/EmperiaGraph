@@ -4,8 +4,11 @@ const connection = require('./helpers/setupConnection')
 const cors = require('cors')
 const app = express()
 app.use(cors())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+
+// create application/json parser
+const jsonParser = bodyParser.json()
+ 
+app.use(jsonParser)
 
 
 app.get('/emperia/friends', (req, res) => {
@@ -44,7 +47,7 @@ app.get('/emperia', (req, res) =>
   res.send('Hello, this is the emperia API. Nothing to look at here.')
 )
 
-app.post('/emperia/add/friend', bodyParser, (req, res) => {
+app.post('/emperia/add/friend', jsonParser, (req, res) => {
 
   console.log(req)
   console.log('LOVE')
