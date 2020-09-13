@@ -44,7 +44,7 @@ app.get('/emperia', (req, res) =>
   res.send('Hello, this is the emperia API. Nothing to look at here.')
 )
 
-app.post('/emperia/add/friend', (req, res) => {
+app.post('/emperia/add/friend', bodyParser, (req, res) => {
 
   console.log(req)
   console.log('LOVE')
