@@ -1,12 +1,11 @@
 const express = require('express')
-const bodyParser = require('body-parser')
 const connection = require('./helpers/setupConnection')
 const cors = require('cors')
 const app = express()
 app.use(cors())
 
 // create application/json parser
-const jsonParser = bodyParser.json()
+const jsonParser = express.json()
  
 app.use(jsonParser)
 
@@ -47,7 +46,7 @@ app.get('/emperia', (req, res) =>
   res.send('Hello, this is the emperia API. Nothing to look at here.')
 )
 
-app.post('/emperia/add/friend', jsonParser, (req, res) => {
+app.post('/emperia/add/friend', (req, res) => {
 
   console.log(req)
   console.log('LOVE')
