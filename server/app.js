@@ -5,6 +5,9 @@ const app = express()
 
 app.use(cors())
 
+// enable pre-flight request
+app.options('*', cors())
+
 // create application/json parser & use middleware
 app.use(express.json())
 
