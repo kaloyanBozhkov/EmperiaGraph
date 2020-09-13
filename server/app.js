@@ -5,9 +5,6 @@ const app = express()
 
 app.use(cors())
 
-// enable pre-flight request
-app.options('*', cors())
-
 // create application/json parser & use middleware
 app.use(express.json())
 
@@ -52,7 +49,7 @@ app.post('/emperia/add/friend', (req, res) => {
   // get friend data
   const friend = req.body
 
-  if (!friend?.firstName || !friend?.lastName || !friend?.totalFriends || !friend?.sex) {
+  if (!friend.firstName || !friend.lastName || !friend.totalFriends || !friend.sex) {
     res.json({ error: 'The provided friend object is invalid, make sure it has firstName, lastName, totalFriends and sex.' })
   }
 
@@ -81,9 +78,9 @@ app.post('/emperia/add/friend', (req, res) => {
 app.post('/emperia/add/connections', (req, res) => {
 
   // get connections data
-  const connections = req.body
+  const { connections = [] } = req.body
 
-  if (!connections?.length) {
+  if (!connections.length) {
     res.json({ error: 'Array of connections must be provided' })
   }
 
@@ -147,9 +144,9 @@ app.post('/emperia/remove/friend', (req, res) => {
 
 app.post('/emperia/remove/connections', (req, res) => {
 
-  const connections = req.body
+  const { connections = [] } = req.body
 
-  if (!connections?.length) {
+  if (!connections.length) {
     res.json({ error: 'Array of connections must be provided' })
   }
 
