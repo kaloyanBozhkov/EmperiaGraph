@@ -2,13 +2,11 @@ const express = require('express')
 const connection = require('./helpers/setupConnection')
 const cors = require('cors')
 const app = express()
+
 app.use(cors())
 
-// create application/json parser
-const jsonParser = express.json()
- 
-app.use(jsonParser)
-
+// create application/json parser & use middleware
+app.use(express.json())
 
 app.get('/emperia/friends', (req, res) => {
   connection.query(
@@ -48,35 +46,21 @@ app.get('/emperia', (req, res) =>
 
 app.post('/emperia/add/friend', (req, res) => {
 
-  console.log(req)
-  console.log('LOVE')
-
   // get friend data
-  const friend = {
-    firstName: 'Tisho',
-    lastName: 'isDope',
-    totalFriends: 400,
-    sex: 'Male'
-  }
-  console.log(`INSERT INTO 
-  ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}
-  ('firstName, 'lastName, 'totalFriends, 'sex, 'id')
-  VALUES (${friend.firstName}, ${friend.lastName}, ${friend.totalFriends}, ${friend.sex})`)
+  const friend = req.body
 
-  console.log(req.body)
+  const sqlQuery = `INSERT INTO 
+  ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}
+  ('firstName','lastName', 'totalFriends', 'sex', 'id')
+  VALUES (${friend.firstName}, ${friend.lastName}, ${friend.totalFriends}, ${friend.sex})`
   
   // create insertion query
   connection.query(
-    `INSERT INTO 
-    ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}
-    ('firstName, 'lastName, 'totalFriends, 'sex, 'id')
-    VALUES (${friend.firstName}, ${friend.lastName}, ${friend.totalFriends}, ${friend.sex})`,
-
+    sqlQuery,
     (err, results, fields) => {
       if (err) {
         res.json(err)
       } else {
-        console.log(results, fields)
         res.json({
           results,
           fields,
