@@ -111,7 +111,7 @@ app.post('/emperia/add/connections', (req, res) => {
 
 app.post('/emperia/remove/friend', (req, res) => {
 
-  const { friendId = null } = req.body
+  const { id: friendId = null } = req.body
 
   if (!friendId || parseInt(friendId) !== friendId) {
     res.json({ error: 'No friend Id provided.' })
@@ -119,11 +119,11 @@ app.post('/emperia/remove/friend', (req, res) => {
 
   const sqlQuery = `DELETE FROM
   \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
-  WHERE \`source\` = ${friendId} OR \`target\` = ${friendId}
+  WHERE \`source\` = ${friendId} OR \`target\` = ${friendId};
   
   DELETE FROM 
   \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
-  WHERE \`id\` = ${friendId}`
+  WHERE \`id\` = ${friendId};`
   
   // create insertion query
   connection.query(
