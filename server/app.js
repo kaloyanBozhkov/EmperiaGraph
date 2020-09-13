@@ -61,6 +61,8 @@ app.post('/emperia/add/friend', (req, res) => {
   ('firstName, 'lastName, 'totalFriends, 'sex, 'id')
   VALUES (${friend.firstName}, ${friend.lastName}, ${friend.totalFriends}, ${friend.sex})`)
 
+  console.log(req.body)
+  
   // create insertion query
   connection.query(
     `INSERT INTO 
@@ -72,6 +74,7 @@ app.post('/emperia/add/friend', (req, res) => {
       if (err) {
         res.json(err)
       } else {
+        console.log(results, fields)
         res.json({
           results,
           fields,
