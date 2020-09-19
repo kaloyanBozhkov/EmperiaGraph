@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`testing modal should render cofirm password modal with expected contents and pass them the expected props 1`] = `
+<Fragment>
+  <div
+    className="modalOverlay"
+  />
+  <div
+    className="box"
+  >
+    <div
+      className="close"
+    >
+      <Icon
+        icon="times"
+      />
+    </div>
+    <ConfirmPassword
+      onSave={[Function]}
+      text="hello world"
+    />
+  </div>
+</Fragment>
+`;
+
+exports[`testing modal should render modal 1`] = `
+<Fragment>
+  <div
+    className="modalOverlay"
+  />
+  <div
+    className="box"
+  >
+    <div
+      className="close"
+    >
+      <Icon
+        icon="times"
+      />
+    </div>
+    <p>
+      Modal is empty, not configured!
+    </p>
+  </div>
+</Fragment>
+`;
