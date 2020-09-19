@@ -1,29 +1,10 @@
 @import 'variables';
 
 .friendList {
-    height: 100%;
+    flex: 1;
+    overflow: auto;
     display: flex;
     flex-direction: column;
-
-    .search {
-        height: 4rem;
-        padding: 1rem 1rem 0 1rem;
-        p {
-            color: white;
-            font-weight: bold;
-            padding:.25rem 0;
-            text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.7);
-        }
-        input {
-            width: 100%;
-            box-sizing: border-box;
-            height: 1.8rem;
-            border: none;
-            outline: none;
-            padding:.5rem;
-            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.3);
-        }
-    }
 
     .content {
         position: relative;

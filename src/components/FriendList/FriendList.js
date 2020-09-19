@@ -1,20 +1,18 @@
 import React, { useState } from 'react'
 import styles from './styles.module.scss'
+import Input from '../UI/Input/Input'
 
 const FriendList = ({ selectedFriend, friends = [], onSelect = f=>f }) => {
   const [search, setSearch] = useState('')
   return ( 
     <div className={styles.friendList}>
-      <div className={styles.search}>
-        <p>Search</p>
-        <input
-          type="text"
-          id="search"
-          name="search"
-          value={search}
-          onChange={({ target: { value } }) => setSearch(value)}
-        />
-      </div>
+      <Input 
+        label="Search friend:"
+        id="search"
+        name="search"
+        value={search}
+        onChange={({ target: { value } }) => setSearch(value)}
+      />
       <div className={styles.content}>
         {friends.map(({ firstName, lastName, id }) => {
           const theSearch = search.toLowerCase()

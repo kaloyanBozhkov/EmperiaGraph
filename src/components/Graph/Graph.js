@@ -176,7 +176,7 @@ const Graph = ({
 
       return () => simulation.stop()
     }
-  }, [simulation, edges, vertices, selectedVertex])
+  }, [simulation, edges, vertices, selectedVertexId])
 
   return (
     <div className={styles.graph}>
