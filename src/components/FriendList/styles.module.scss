@@ -67,4 +67,38 @@
         }
     }
 
+    .clearSearch {
+        color: white;
+        font-weight: bold;
+        margin: 1rem;
+        text-shadow: -1px 1px 3px #000000c2;
+        flex-basis: 100%;
+    }
+
+    &.doubleColumn {
+        .content {
+            flex-direction: row;
+            flex-wrap: wrap;
+            column-gap: 2rem;
+            justify-content: center;
+        }
+
+        .searchBarWrapper {
+            > div {
+                display: flex;
+                max-width: 400px;
+                height: 1.2rem;
+                margin: 0 auto;
+
+                > p {
+                    white-space: nowrap;
+                    margin-right: 1rem;
+                }
+
+                @media (min-width: 1000px) {
+                    width: 32rem;
+                }
+            }        
+        }
+    }
 }

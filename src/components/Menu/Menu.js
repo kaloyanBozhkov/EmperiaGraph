@@ -1,19 +1,13 @@
 import React from 'react'
 import styles from './styles.module.scss'
-import FriendList from '../FriendList/FriendList'
-
+import FriendList from '~/containers/FriendList.container'
 import FriendsController from '~/containers/FriendsController.container'
 
-const Menu = ({ selectedFriend, friends, connections, onSelectFriend }) => {
+const Menu = () => {
   return (
     <div className={styles.menu}>
       <FriendsController />
-      <FriendList
-        friends={friends}
-        onSelect={onSelectFriend}
-        selectedFriend={selectedFriend}
-        connecitons={connections}
-      />
+      <FriendList />
     </div>
   )
 }

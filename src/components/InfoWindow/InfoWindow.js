@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import styles from './styles.module.scss'
 import Icon from '../UI/Icon/Icon'
+import Button from '../UI/Button/Button'
 
-const InfoWindow = ({ selectedFriend, clearSelectedFriend }) => {
-
-    const [editMode, setEditMode] = useState(false)
+const InfoWindow = ({ selectedFriend, clearSelectedFriend, deleteSelectedFriend, addConnections }) => {
+    const [showActions, setShowActions] = useState(false)
 
     // if friend not selected, do not show info window
     if (!selectedFriend) {
@@ -12,7 +12,7 @@ const InfoWindow = ({ selectedFriend, clearSelectedFriend }) => {
     }
 
     // if friend selcted, get the data we need to show
-    const { firstName, lastName, sex, totalFriends, connections: { from: emperiaFriends } } = selectedFriend 
+    const { firstName, lastName, sex, totalFriends, connections: { from: emperiaFriends } } = selectedFriend
 
     return (
         <>
@@ -26,14 +26,15 @@ const InfoWindow = ({ selectedFriend, clearSelectedFriend }) => {
                 <p>Sex: {sex}</p>
                 <p>Facebook friends: {totalFriends}</p>
                 <p>Emperia friends: {emperiaFriends.length || '-'}</p>
-            </div>
-            {!editMode && <button className={styles.editModeButton} onClick={() => setEditMode(true)}>Edit Relationships</button>}
-            {editMode && (
-                <div className={styles.relationships}>
-                    {emperiaFriends.map(({ target: { firstName, lastName, id } }) => <p key={id}>{firstName} {lastName} </p>)}
+                <div className={styles.actionsArea} data-expanded={showActions ? true : undefined}>
+                    {showActions && (<>
+                        <Button label="Edit friendships" onClick={() => addConnections(selectedFriend)} />
+                        <Button label="Delete friend & connections" onClick={() => deleteSelectedFriend(selectedFriend)} />
+                        
+                    </>)}
+                    <button className={styles.showMoreButton} onClick={() => setShowActions(!showActions)}>{showActions ? 'Hide' : 'Show'} actions</button>
                 </div>
-            )}
-       
+            </div>
         </>
     )
 }

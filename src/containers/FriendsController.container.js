@@ -1,15 +1,16 @@
 import { connect } from 'react-redux'
 
+import { openModal } from '~/redux/modal/modal.actions'
+
 import FriendsController from '~/components/FriendsController/FriendsController'
 
-import { openModal } from '~/redux/modal/modal.actions'
 
 const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onRemoveFriend: () => dispatch(openModal('removeFriend')),
-  onAddFriend: () => dispatch(openModal('addFriend'))
+  onRemoveFriend: () => dispatch(openModal('removeFriend', { modalLabel: 'Remove Friend' })),
+  onAddFriend: () => dispatch(openModal('addFriend', { modalLabel: 'Add Friend' }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FriendsController)

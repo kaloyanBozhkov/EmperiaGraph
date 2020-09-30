@@ -1,16 +1,18 @@
 import React from 'react'
 
 import BaseLayout from '~/templates/BaseLayout'
-import Graph from '~/pages/Graph'
+
+import Graph from '~/containers/Graph.container'
+
 import Header from '~/components/Header/Header'
 import InfoWindow from '~/containers/InfoWIndow.container'
-import MenuContainer from '~/containers/Menu.container' 
+import Menu from '~/components/Menu/Menu' 
 
 const Main = ({ ...graphProps }) => {
   return (
     <BaseLayout 
       Header={<Header />} 
-      Menu={<MenuContainer />} 
+      Menu={<Menu />} 
       InfoWindow={<InfoWindow />}
     >
       <Graph {...graphProps} />

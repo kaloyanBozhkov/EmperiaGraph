@@ -36,5 +36,11 @@
     cursor: pointer;
   }
 
+  .title {
+    padding-left: .5rem;
+    border-left: 3px solid $primary-color;
+    font-size: 1.4rem;
+  }
+
   @include customModalModifiers();
 }

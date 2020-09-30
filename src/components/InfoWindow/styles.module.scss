@@ -63,6 +63,27 @@
         }
     }
 
+    .showMoreButton {
+        display: block;
+        width: 100%;
+    }
+
+    .actionsArea {
+        max-height: 7rem;
+        overflow:hidden;
+        transition: all .5s;
+        margin-top:1rem;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 2rem 2rem;
+        row-gap: 1rem;
+
+        &:not([data-expanded="true"]) {
+            max-height: 2rem;
+            display: flex;
+        }
+    }
 
     .relationships {
         

@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
 
 import styles from './styles.module.scss'
 import Icon from 'UI/Icon/Icon'
 
-import ConfirmPassword from './ConfirmPassword/ConfirmPassword'
-
-import { closeModal } from '~/redux/modal/modal.actions'
+import RemoveFriend from './RemoveFriend/RemoveFriend'
 
 /**
  * @param  {string} {openedModal -> name of modal to open
@@ -39,7 +36,7 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
   let content = null
 
   switch (modal) {
-    case 'confirmPassword': {
+    case 'removeFriend': {
       const { onSave, ...otherProps } = payload
       const onSaveWithClose = (...args) => {
         // after getting password from input and passing it as arg, close modal
@@ -48,7 +45,11 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
         onSave(...args)
       }
 
-      content = <ConfirmPassword onSave={onSaveWithClose} {...otherProps} />
+      content = <RemoveFriend onSave={onSaveWithClose} onCancel={onCloseModal} {...otherProps} />
+      break
+    }
+    case 'addFriend': {
+
       break
     }
     default:
@@ -60,9 +61,9 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
     <>
       <div className={styles.modalOverlay} />
       <div className={[styles.box, (modalModifier && styles[modalModifier]) || undefined].join(' ').trim()}>
-        {modalLabel && <p>{modalLabel}</p>}
+        {modalLabel && <p className={styles.title}>{modalLabel}</p>}
         <div className={styles.close} onClick={onCloseModal}>
-          <Icon icon="times" />
+          <Icon icon="close" />
         </div>
         {content}
       </div>
@@ -70,14 +71,4 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  modal: state.modalReducer.modal,
-  data: state.modalReducer.data,
-  error: state.modalReducer.error,
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  onCloseModal: () => dispatch(closeModal()),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Modal)
+export default Modal
