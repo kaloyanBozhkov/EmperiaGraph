@@ -6,10 +6,10 @@ import FriendsController from '~/components/FriendsController/FriendsController'
 
 
 const mapStateToProps = (state) => ({
+
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onRemoveFriend: () => dispatch(openModal('removeFriend', { modalLabel: 'Remove Friend' })),
   onAddFriend: () => dispatch(openModal('addFriend', { modalLabel: 'Add Friend' }))
 })
 

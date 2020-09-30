@@ -29,7 +29,7 @@ const InfoWindow = ({ selectedFriend, clearSelectedFriend, deleteSelectedFriend,
                 <div className={styles.actionsArea} data-expanded={showActions ? true : undefined}>
                     {showActions && (<>
                         <Button label="Edit friendships" onClick={() => addConnections(selectedFriend)} />
-                        <Button label="Delete friend & connections" onClick={() => deleteSelectedFriend(selectedFriend)} />
+                        <Button label="Delete friend & connections" onClick={() => deleteSelectedFriend(selectedFriend, `${firstName} ${lastName}`)} />
                         
                     </>)}
                     <button className={styles.showMoreButton} onClick={() => setShowActions(!showActions)}>{showActions ? 'Hide' : 'Show'} actions</button>

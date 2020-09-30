@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import styles from './styles.module.scss'
 import Icon from 'UI/Icon/Icon'
 
-import RemoveFriend from './RemoveFriend/RemoveFriend'
+import Confirm from './Confirm/Confirm'
 
 /**
  * @param  {string} {openedModal -> name of modal to open
@@ -36,16 +36,18 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
   let content = null
 
   switch (modal) {
-    case 'removeFriend': {
-      const { onSave, ...otherProps } = payload
-      const onSaveWithClose = (...args) => {
+    case 'confirm': {
+      
+      const { onConfirm, ...otherProps } = payload
+
+      const onConfirmWithClose = (...args) => {
         // after getting password from input and passing it as arg, close modal
         onCloseModal()
         // run the onSave from the modal button click, passing all arguments
-        onSave(...args)
+        onConfirm(...args)
       }
 
-      content = <RemoveFriend onSave={onSaveWithClose} onCancel={onCloseModal} {...otherProps} />
+      content = <Confirm onConfirm={onConfirmWithClose} onCancel={onCloseModal} {...otherProps} />
       break
     }
     case 'addFriend': {
