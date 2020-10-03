@@ -1,6 +1,9 @@
 const express = require('express')
 const connection = require('./helpers/setupConnection')
 const cors = require('cors')
+const { default: formatEdges } = require('./helpers/formatEdges')
+const { default: formatFriends } = require('./helpers/formatFriends')
+const { default: purifyConnections } = require('./helpers/purifyConnections')
 const app = express()
 
 app.use(cors())
@@ -40,6 +43,57 @@ app.get('/emperia/connections', (req, res) => {
   )
 })
 
+app.get('/emperia/data', (req, res) => {
+
+  new Promise((res, rej) => {
+    let responses = {}
+
+    const cont = (status, payload) => {
+      if (!status) {
+        rej(payload)
+      }
+
+      responses = { ...responses, ...payload }
+
+      if (Object.values(responses).length === 2) {
+        res(responses)
+      }
+    }
+
+    const callback = (table) => (err, results, fields) => {
+      if (err) {
+        cont(false, { [table]: err })
+      } else {
+        cont(true, { [table]: results })
+      }
+    }
+
+    connection.query(
+      'SELECT * FROM ' + process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS,
+      callback('friends')
+    )
+
+    connection.query(
+      'SELECT * FROM ' + process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS,
+      callback('connections')
+    )
+
+  })
+    .then(({ friends, connections }) => {
+
+      const formattedConnections = formatEdges(connections, friends)
+      const formattedFriends = formatFriends(friends, formattedConnections)
+      const connectionsFormatted = purifyConnections(formattedFriends)
+
+      res.json({
+        connections: connectionsFormatted,
+        friends: formattedFriends
+      })
+
+    })
+    .catch((err) => res.json(err))
+})
+
 app.get('/emperia', (req, res) =>
   res.send('Hello, this is the emperia API. Nothing to look at here directly.')
 )
@@ -57,7 +111,7 @@ app.post('/emperia/add/friend', (req, res) => {
   \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
   (\`firstName\`,\`lastName\`,\`totalFriends\`,\`sex\`)
   VALUES ('${friend.firstName}', '${friend.lastName}', '${friend.totalFriends}', '${friend.sex}')`
-  
+
   // create insertion query
   connection.query(
     sqlQuery,
@@ -92,7 +146,7 @@ app.post('/emperia/add/connections', (req, res) => {
   \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
   (\`source\`,\`target\`)
   VALUES ${connections.map(({ source, target }) => (`('${source}','${target}')`)).join(' ')}`
-  
+
   // create insertion query
   connection.query(
     sqlQuery,
@@ -124,7 +178,7 @@ app.post('/emperia/remove/friend', (req, res) => {
   DELETE FROM 
   \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
   WHERE \`id\` = ${friendId};`
-  
+
   // create insertion query
   connection.query(
     sqlQuery,
@@ -158,7 +212,7 @@ app.post('/emperia/remove/connections', (req, res) => {
   \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
   WHERE \`source\` IN (${connections.map(({ source }) => source).join(',')}) 
   AND \`target\` IN (${connections.map(({ target }) => target).join(',')})`
-  
+
   // create insertion query
   connection.query(
     sqlQuery,
