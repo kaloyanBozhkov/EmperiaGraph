@@ -1,9 +1,9 @@
 const express = require('express')
 const connection = require('./helpers/setupConnection')
 const cors = require('cors')
-const { default: formatEdges } = require('./helpers/formatEdges')
-const { default: formatFriends } = require('./helpers/formatFriends')
-const { default: purifyConnections } = require('./helpers/purifyConnections')
+const formatEdges = require('./helpers/formatEdges')
+const formatFriends = require('./helpers/formatFriends')
+const purifyConnections = require('./helpers/purifyConnections')
 
 const app = express()
 
