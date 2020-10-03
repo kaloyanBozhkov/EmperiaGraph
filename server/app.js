@@ -45,53 +45,26 @@ app.get('/emperia/connections', (req, res) => {
 
 app.get('/emperia/data', (req, res) => {
 
-  new Promise((res, rej) => {
-    let responses = {}
-
-    const cont = (status, payload) => {
-      if (!status) {
-        rej(payload)
-      }
-
-      responses = { ...responses, ...payload }
-
-      if (Object.values(responses).length === 2) {
-        res(responses)
-      }
-    }
-
-    const callback = (table) => (err, results, fields) => {
+  connection.query(
+    `SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS};
+       SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}`,
+    (err, results, fields) => {
       if (err) {
-        cont(false, { [table]: err })
+        res.json(err)
       } else {
-        cont(true, { [table]: results })
+
+        const [friends, connections] = results
+        const formattedConnections = formatEdges(connections, friends)
+        const formattedFriends = formatFriends(friends, formattedConnections)
+        const connectionsFormatted = purifyConnections(formattedFriends)
+
+        res.json({
+          connections: connectionsFormatted,
+          friends: formattedFriends
+        })
       }
     }
-
-    connection.query(
-      'SELECT * FROM ' + process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS,
-      callback('friends')
-    )
-
-    connection.query(
-      'SELECT * FROM ' + process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS,
-      callback('connections')
-    )
-
-  })
-    .then(({ friends, connections }) => {
-
-      const formattedConnections = formatEdges(connections, friends)
-      const formattedFriends = formatFriends(friends, formattedConnections)
-      const connectionsFormatted = purifyConnections(formattedFriends)
-
-      res.json({
-        connections: connectionsFormatted,
-        friends: formattedFriends
-      })
-
-    })
-    .catch((err) => res.json(err))
+  )
 })
 
 app.get('/emperia', (req, res) =>
