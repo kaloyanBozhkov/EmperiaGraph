@@ -1,5 +1,5 @@
 // remove double connections, keep one way from > 
-export default (formattedFriends) => {
+const purifyConnections = (formattedFriends) => {
 
     return formattedFriends
         // get all friends' from connections
@@ -23,3 +23,6 @@ export default (formattedFriends) => {
             return [...acc, conn]
         }, [])
 }
+
+
+module.exports = purifyConnections

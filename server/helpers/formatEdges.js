@@ -31,4 +31,4 @@ const formatEdges = (edges, vertices) =>
     }
   })
 
-export default formatEdges
+module.exports = formatEdges

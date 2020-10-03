@@ -8,4 +8,4 @@ const formatFriends = (friends, connections) =>
         }
     }))
 
-export default formatFriends
+module.exports = formatFriends
