@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import styles from './styles.module.scss'
-import Button from 'UI/Button/Button'
+import Button from '~/components/Modal/Confirm/node_modules/UI/Button/Button'
 import FriendList from '~/containers/FriendList.container'
 
 const RemoveFriend = ({

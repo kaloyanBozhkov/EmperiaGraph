@@ -3,12 +3,12 @@ const apiBase = 'https://kaloyanbozhkov.com/emperia'
 // build our request object
 function requestBuilder() {
   return {
-    setMethod(method) {
-      this.method = method
+    setEndpoint(endpoint) {
+      this.endpoint = endpoint
       return this
     },
-    setUrl(url) {
-      this.url = url
+    setMethod(method) {
+      this.method = method
       return this
     },
     setParams(params) {
@@ -24,21 +24,21 @@ function requestBuilder() {
       return this
     },
     build() {
-      return new Request(this.method, this.url, this.params, this.headers, this.body)
+      return new Request(this.method, this.endpoint, this.params, this.headers, this.body)
     },
   }
 }
 
 // perform request
-function Request(method, url, params, headers = {}, body) {
+function Request(method, endpoint, params, headers = {}, body) {
   this.method = method
-  this.url = url
+  this.endpoint = endpoint
   this.params = params
   this.headers = headers
   this.body = body
 
   this.fetchApi = function () {
-    const url = this.params ? `${apiBase}/${this.url}?${this.params}` : `${apiBase}/${this.url}`
+    const url = this.params ? `${apiBase}/${this.endpoint}?${this.params}` : `${apiBase}/${this.endpoint}`
 
     return fetch(url, {
       method: this.method,

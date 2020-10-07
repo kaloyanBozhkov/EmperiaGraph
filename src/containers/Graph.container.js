@@ -2,15 +2,14 @@ import { connect } from 'react-redux'
 
 import { openModal } from '~/redux/modal/modal.actions'
 import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
-import { selectPurifiedConnections } from '~/redux/friend/friend.selector'
+import { getSelectedFriendData } from '~/redux/friend/friend.selector'
 
 import Graph from '~/pages/Graph'
 
 const mapStateToProps = (state) => ({
-  selectedFriend: state.friendReducer.selectedFriend,
-  friends: state.friendReducer.friends,
-
-  connectionsPurified: selectPurifiedConnections(state),
+  selectedFriend: getSelectedFriendData(state),
+  friends: state.requestReducer.friends,
+  connections: state.requestReducer.connections,
 })
 
 const mapDispatchToProps = (dispatch) => ({

@@ -9,13 +9,15 @@ import useWindowHeight from '~/hooks/useWindowHeight'
 
 const Graph = ({
   friends,
-  connectionsPurified,
+  connections,
 
   selectedFriend,
 
   setSelectedFriend,
   clearSelectedFriend,
 }) => {
+  console.log(friends,
+    connections,)
   const graphWrapper = useRef()
   
   const canvasSize = {
@@ -27,7 +29,7 @@ const Graph = ({
     <div className={styles.main} ref={graphWrapper}>
       <GraphComponent
         vertices={friends}
-        edges={connectionsPurified}
+        edges={connections}
         canvasConfig={canvasSize}
 
         selectedVertex={selectedFriend}

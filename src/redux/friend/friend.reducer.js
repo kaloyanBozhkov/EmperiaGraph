@@ -11,7 +11,7 @@ const clearFriend = (state) => ({ ...state, selectedFriend: null })
 
 const selectFriend = (state, friendId) => ({
   ...state,
-  selectedFriend: state.friends.find(({ id }) => friendId === id) || null,
+  selectedFriend: friendId
 })
 
 const friendReducer = (state = initialState, action = {}) => {

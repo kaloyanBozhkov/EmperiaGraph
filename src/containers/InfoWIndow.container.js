@@ -2,12 +2,13 @@ import { connect } from 'react-redux'
 
 import { openModal } from '~/redux/modal/modal.actions'
 import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
+import { getSelectedFriendData } from '~/redux/friend/friend.selector'
 
 import InfoWindow from '~/components/InfoWindow/InfoWindow'
-import { dispatch } from 'd3'
+
 
 const mapStateToProps = (state) => ({
-  selectedFriend: state.friendReducer.selectedFriend,
+  selectedFriend: getSelectedFriendData(state)
 })
 
 const mapDispatchToProps = (dispatch) => ({

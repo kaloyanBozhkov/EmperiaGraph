@@ -1,31 +1,15 @@
 import { createSelector } from 'reselect'
 
-const getFriends = (state) => state.friendReducer.friends
+const getFriends = (state) => state.requestReducer.friends
+const getSelectedFriend = (state) => state.friendReducer.selectedFriend
 
-// get all .from of each friends[].connections, skipping repeating links
-export const selectPurifiedConnections = createSelector(
-  [getFriends],
-  (friends) => {
-    const connections = friends.reduce((acc, friend) => [
-      ...acc,
-      ...friend.connections.from
-    ], [])
-    
-    const connectionsPurified = connections.reduce((acc, conn) => {
-      const {
-          source: sourceId,
-          target: targetId
-      } = conn
-    
-      // connection exists both ways, so keep only 1 of them
-      if (acc.find((conn) => conn.source.id === sourceId && conn.target.id === targetId)) {
-          return acc
-      }
-    
-      // conn is unique/one way so keep as is
-      return [ ...acc, conn ]
-    }, [])
+export const getSelectedFriendData = createSelector(
+    [getFriends, getSelectedFriend],
+    (friends, selectedFriendId) => {
+        if (friends && selectedFriendId) {
+            return friends.find(({ id }) => id === selectedFriendId) || null
+        }
 
-    return connectionsPurified
-  }
+        return null
+    }
 )
