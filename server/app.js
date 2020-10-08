@@ -186,7 +186,7 @@ app.delete('/emperia/friend', (req, res) => {
         if (err) {
           res.json(err)
         } else {
-          res.json({ operation: 'DELETE_FRIEND', payload: friendId })
+          res.json({ operation: 'DELETE_FRIEND', payload: { friendId } })
         }
       }
     )

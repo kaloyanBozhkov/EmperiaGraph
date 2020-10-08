@@ -18,25 +18,11 @@ const initialState = {
   connections: []
 }
 
-const setFormattedData = (state, formattedData) => {
-
-
-  // // if delete, update local state to exclude the deleted firend
-  //   if (payload.operation === 'DELETE_FRIEND') {
-  //       return {
-  //         ...state,
-  //         friends: state.friends.filter(({ id }) => id !== payload.firendId),
-  //         connections: state.connections.filter(({ source, target }) => source.id !== payload.friendId && target.id !==  payload.friendId)
-  //       }
-  //   }
-
-  return {
-    ...state,
-    ...formattedData,
-    isPending: false
-  }
-}
-
+const setFormattedData = (state, formattedData) => ({
+  ...state,
+  ...formattedData,
+  isPending: false
+})
 
 const setData = (state, { operation, payload }) => {
   switch (operation) {
@@ -45,7 +31,8 @@ const setData = (state, { operation, payload }) => {
       return {
         ...state,
         friends: state.friends.filter(({ id }) => id !== payload.firendId),
-        connections: state.connections.filter(({ source, target }) => source.id !== payload.friendId && target.id !== payload.friendId)
+        connections: state.connections.filter(({ source, target }) => source.id !== payload.friendId && target.id !== payload.friendId),
+        isPending: false,
       }
     default:
       return state
@@ -65,6 +52,7 @@ const setFailed = (state, error) => ({
 })
 
 const dashboardReportsReducer = (state = initialState, { type, payload } = {}) => {
+
   switch (type) {
     case type.includes('GET') || REQUEST_FORMATTED_DATA_START:
       return setPending(state, 'get')
@@ -89,7 +77,7 @@ const dashboardReportsReducer = (state = initialState, { type, payload } = {}) =
 
       return setFormattedData(state, { connections: payload })
     case REQUEST_FORMATTED_DATA_SUCCESS:
-      return setData(state, payload)
+      return setFormattedData(state, payload)
     default:
       return state
   }
