@@ -8,6 +8,7 @@ module.exports = (config, env) => {
       mixins: path.resolve(__dirname, 'src/scss/mixins.scss'),
       variables: path.resolve(__dirname, 'src/scss/variables.scss'),
       keyframes: path.resolve(__dirname, 'src/scss/keyframes.scss'),
+      'UI': path.resolve(__dirname, 'src/components/UI')
     },
   }
 
