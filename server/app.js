@@ -114,7 +114,7 @@ app.post('/emperia/friend', (req, res) => {
         } else {
           res.json({
             operation: 'CREATE_FRIEND',
-            payload: { friendData: friend, results, fields }
+            payload: { friendData: results[1][0] } // gotta get friend data from second query due to the need of ID which is AUTO_INCREMET
           })
         }
       }
