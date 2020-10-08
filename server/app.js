@@ -12,6 +12,7 @@ app.use(cors())
 // create application/json parser & use middleware
 app.use(express.json())
 
+// get friends
 app.get('/emperia/friends', (req, res) => {
   connection.query(
     'SELECT * FROM ' + process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS,
@@ -28,6 +29,8 @@ app.get('/emperia/friends', (req, res) => {
   )
 })
 
+
+// get connections
 app.get('/emperia/connections', (req, res) => {
   connection.query(
     'SELECT * FROM ' + process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS,
@@ -44,6 +47,7 @@ app.get('/emperia/connections', (req, res) => {
   )
 })
 
+// get friends and connections
 app.get('/emperia/data', (req, res) => {
 
   connection.query(
@@ -72,7 +76,8 @@ app.get('/emperia', (req, res) =>
   res.send('Hello, this is the emperia API. Nothing to look at here directly.')
 )
 
-app.post('/emperia/add/friend', (req, res) => {
+// add friend
+app.post('/emperia/friend', (req, res) => {
 
   // get friend data
   const friend = req.body
@@ -102,8 +107,8 @@ app.post('/emperia/add/friend', (req, res) => {
   )
 })
 
-
-app.post('/emperia/add/connections', (req, res) => {
+// add connection
+app.post('/emperia/connections', (req, res) => {
 
   // get connections data
   const { connections = [] } = req.body
@@ -137,7 +142,8 @@ app.post('/emperia/add/connections', (req, res) => {
   )
 })
 
-app.post('/emperia/remove/friend', (req, res) => {
+// delete friend
+app.delete('/emperia/friend', (req, res) => {
 
   const { id: friendId = null } = req.body
 
@@ -169,8 +175,8 @@ app.post('/emperia/remove/friend', (req, res) => {
   )
 })
 
-
-app.post('/emperia/remove/connections', (req, res) => {
+// delete connection
+app.delete('/emperia/connections', (req, res) => {
 
   const { connections = [] } = req.body
 

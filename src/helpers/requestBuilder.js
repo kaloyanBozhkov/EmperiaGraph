@@ -19,8 +19,8 @@ function requestBuilder() {
       this.headers = headers
       return this
     },
-    setBody(body) {
-      this.body = body
+    setBody(body, stringify = true) {
+      this.body = stringify ? JSON.stringify(body) : body
       return this
     },
     build() {
@@ -43,7 +43,7 @@ function Request(method, endpoint, params, headers = {}, body) {
     return fetch(url, {
       method: this.method,
       headers: this.headers,
-      body: JSON.stringify(this.body),
+      body: this.body,
     })
   }
 }
