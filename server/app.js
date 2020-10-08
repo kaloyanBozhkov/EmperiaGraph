@@ -112,9 +112,19 @@ app.post('/emperia/friend', (req, res) => {
         if (err) {
           res.json(err)
         } else {
+          const friendData = {
+            ...results[1][0],
+
+            // since new friend, connections are empty!
+            connections: {
+              from: [],
+              to: [],
+            }
+          }
+
           res.json({
             operation: 'CREATE_FRIEND',
-            payload: { friendData: results[1][0] } // gotta get friend data from second query due to the need of ID which is AUTO_INCREMET
+            payload: { friendData } // gotta get friend data from second query due to the need of ID which is AUTO_INCREMET
           })
         }
       }
