@@ -30,7 +30,7 @@ const setData = (state, { operation, payload }) => {
       // if delete, update local state to exclude the deleted firend
       return {
         ...state,
-        friends: state.friends.filter(({ id }) => id !== payload.firendId),
+        friends: state.friends.filter(({ id }) => id !== payload.friendId),
         connections: state.connections.filter(({ source, target }) => source.id !== payload.friendId && target.id !== payload.friendId),
         isPending: false,
       }

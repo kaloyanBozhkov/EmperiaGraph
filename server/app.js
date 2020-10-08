@@ -112,7 +112,7 @@ app.post('/emperia/friend', (req, res) => {
         } else {
           res.json({
             operation: 'CREATE_FRIEND',
-            payload: { friendData: friend }
+            payload: { friendData: friend, results, fields }
           })
         }
       }
