@@ -15,18 +15,18 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setSelectedFriend: (friend) => dispatch(selectFriend(friend)),
   clearSelectedFriend: () => dispatch(clearFriend()),
-  deleteSelectedFriend: (friendId, friedName) => dispatch(openModal('confirm', {
+  deleteSelectedFriend: (friend, friedName) => dispatch(openModal('confirm', {
     modalLabel: 'Delete friend & connections?',
     label: `Are you sure you want to remove ${friedName} from friends?`,
-    onConfirm: () => requestFriendPending({
+    onConfirm: () => dispatch(requestFriendPending({
       requestConfig: {
-        endpoint: 'connections',
+        endpoint: 'friend',
         method: 'DELETE',
-        body: friendId
+        body: { id: friend.id }
       },
       successCallback: requestFriendSuccess,
       failCallback: requestFriendFail
-    })
+    }))
   })),
   editConnections: (friendId, friedName) => dispatch(openModal('editConnections', {
     modalLabel: 'Edit connections',

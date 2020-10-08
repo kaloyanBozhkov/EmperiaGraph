@@ -182,14 +182,11 @@ app.delete('/emperia/friend', (req, res) => {
     // create insertion query
     connection.query(
       sqlQuery,
-      (err, results, fields) => {
+      (err) => {
         if (err) {
           res.json(err)
         } else {
-          res.json({
-            results,
-            fields,
-          })
+          res.json({ operation: 'DELETE_FRIEND', payload: friendId })
         }
       }
     )

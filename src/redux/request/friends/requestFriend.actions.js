@@ -1,8 +1,8 @@
 import * as constants from './requestFriend.constants'
 
-export const requestFriendPending = (config) => ({
-    type: constants[`REQUEST_FRIEND_${config.method}_PENDING`],
-    payload: config
+export const requestFriendPending = ({ requestConfig, successCallback, failCallback }) => ({
+    type: constants[`REQUEST_FRIEND_${requestConfig.method}_PENDING`],
+    payload: { requestConfig, successCallback, failCallback }
 })
 
 export const requestFriendSuccess = (response) => ({

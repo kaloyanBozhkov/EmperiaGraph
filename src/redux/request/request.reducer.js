@@ -18,11 +18,39 @@ const initialState = {
   connections: []
 }
 
-const setData = (state, formattedData) => ({
-  ...state,
-  ...formattedData,
-  isPending: false
-})
+const setFormattedData = (state, formattedData) => {
+
+
+  // // if delete, update local state to exclude the deleted firend
+  //   if (payload.operation === 'DELETE_FRIEND') {
+  //       return {
+  //         ...state,
+  //         friends: state.friends.filter(({ id }) => id !== payload.firendId),
+  //         connections: state.connections.filter(({ source, target }) => source.id !== payload.friendId && target.id !==  payload.friendId)
+  //       }
+  //   }
+
+  return {
+    ...state,
+    ...formattedData,
+    isPending: false
+  }
+}
+
+
+const setData = (state, { operation, payload }) => {
+  switch (operation) {
+    case 'DELETE_FRIEND':
+      // if delete, update local state to exclude the deleted firend
+      return {
+        ...state,
+        friends: state.friends.filter(({ id }) => id !== payload.firendId),
+        connections: state.connections.filter(({ source, target }) => source.id !== payload.friendId && target.id !== payload.friendId)
+      }
+    default:
+      return state
+  }
+}
 
 const setPending = (state, method) => ({
   ...state,
@@ -49,9 +77,17 @@ const dashboardReportsReducer = (state = initialState, { type, payload } = {}) =
     case REQUEST_FRIEND_FAIL || REQUEST_CONNECTIONS_FAIL || REQUEST_FORMATTED_DATA_FAIL:
       return setFailed(state, payload)
     case REQUEST_FRIEND_SUCCESS:
-      return setData(state, { friends: payload })
+      if (payload.operation) {
+        return setData(state, payload)
+      }
+
+      return setFormattedData(state, { friends: payload })
     case REQUEST_CONNECTIONS_SUCCESS:
-      return setData(state, { connections: payload })
+      if (payload.operation) {
+        return setData(state, payload)
+      }
+
+      return setFormattedData(state, { connections: payload })
     case REQUEST_FORMATTED_DATA_SUCCESS:
       return setData(state, payload)
     default:

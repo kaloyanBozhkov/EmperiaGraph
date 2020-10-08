@@ -1,8 +1,8 @@
 import * as constants from './requestConnections.constants'
 
-export const requestConnectionsPending = (config) => ({
-    type: constants[`REQUEST_CONNECTIONS_${config.method}_PENDING`],
-    payload: config
+export const requestConnectionsPending = ({ requestConfig, successCallback, failCallback }) => ({
+    type: constants[`REQUEST_CONNECTIONS_${requestConfig.method}_PENDING`],
+    payload: { requestConfig, successCallback, failCallback }
 })
 
 export const requestConnectionsSuccess = (response) => ({

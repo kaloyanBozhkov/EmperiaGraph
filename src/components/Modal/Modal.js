@@ -39,15 +39,14 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
     case 'confirm': {
       
       const { onConfirm, ...otherProps } = payload
-
       const onConfirmWithClose = (...args) => {
-        // after getting password from input and passing it as arg, close modal
         onCloseModal()
+
         // run the onSave from the modal button click, passing all arguments
         onConfirm(...args)
       }
 
-      content = <Confirm onConfirm={onConfirmWithClose} onCancel={onCloseModal} {...otherProps} />
+      content = <Confirm onConfirm={onConfirmWithClose} onCancel={onCloseModal} onSave={onConfirmWithClose} {...otherProps} />
       break
     }
     case 'addFriend': {
