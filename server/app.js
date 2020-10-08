@@ -95,7 +95,7 @@ app.post('/emperia/friend', (req, res) => {
     const friend = req.body
 
     if (!friend.firstName || !friend.lastName || !friend.totalFriends || !friend.sex) {
-      res.json({ error: 'The provided friend object is invalid, make sure it has firstName, lastName, totalFriends and sex.' })
+      throw Error('The provided friend object is invalid, make sure it has firstName, lastName, totalFriends and sex.')
     }
 
     const sqlQuery = `INSERT INTO 
@@ -130,11 +130,11 @@ app.post('/emperia/connections', (req, res) => {
     const { connections = [] } = req.body
 
     if (!connections.length) {
-      res.json({ error: 'Array of connections must be provided' })
+      throw Error('Array of connections must be provided.')
     }
 
     if (connections.filter(({ source, target }) => !source || !target).length > 0) {
-      res.json({ error: 'Array of connections must be made of { source, target } items.' })
+      throw Error('Array of connections must be made of { source, target } items.')
     }
 
     const sqlQuery = `INSERT INTO 
@@ -168,7 +168,7 @@ app.delete('/emperia/friend', (req, res) => {
     const { id: friendId = null } = req.body
 
     if (!friendId || parseInt(friendId) !== friendId) {
-      res.json({ error: 'No friend Id provided.' })
+      throw Error('No friend Id provided.')
     }
 
     const sqlQuery = `DELETE FROM
@@ -205,11 +205,11 @@ app.delete('/emperia/connections', (req, res) => {
     const { connections = [] } = req.body
 
     if (!connections.length) {
-      res.json({ error: 'Array of connections must be provided' })
+      throw Error('Array of connections must be provided' )
     }
 
     if (connections.filter(({ source, target }) => !source || !target).length > 0) {
-      res.json({ error: 'Array of connections must be made of { source, target } items.' })
+      throw Error('Array of connections must be made of { source, target } items.')
     }
 
     const sqlQuery = `DELETE FROM
