@@ -75,6 +75,10 @@
         flex-basis: 100%;
     }
 
+    .searchBarWrapper {
+        margin: 1rem;
+    }
+
     &.doubleColumn {
         .content {
             flex-direction: row;

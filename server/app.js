@@ -111,8 +111,8 @@ app.post('/emperia/friend', (req, res) => {
           res.json(err)
         } else {
           res.json({
-            results,
-            fields,
+            operation: 'CREATE_FRIEND',
+            payload: { friendData: friend }
           })
         }
       }

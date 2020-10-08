@@ -2,8 +2,8 @@ import { all, call, put, takeLatest } from 'redux-saga/effects'
 
 import {
     REQUEST_FRIEND_DELETE_PENDING,
-    REQUEST_FRIEND_CREATE_PENDING,
-    REQUEST_FRIEND_UPDATE_PENDING,
+    REQUEST_FRIEND_PUT_PENDING,
+    REQUEST_FRIEND_POST_PENDING,
     REQUEST_FRIEND_GET_PENDING
 } from './friends/requestFriend.constants'
 import {
@@ -56,8 +56,8 @@ export function* requestAsync({ payload: { requestConfig, successCallback, failC
 // Listner
 export function* requestFriendsStart() {
     yield takeLatest(REQUEST_FRIEND_DELETE_PENDING, requestAsync)
-    yield takeLatest(REQUEST_FRIEND_CREATE_PENDING, requestAsync)
-    yield takeLatest(REQUEST_FRIEND_UPDATE_PENDING, requestAsync)
+    yield takeLatest(REQUEST_FRIEND_PUT_PENDING, requestAsync)
+    yield takeLatest(REQUEST_FRIEND_POST_PENDING, requestAsync)
     yield takeLatest(REQUEST_FRIEND_GET_PENDING, requestAsync)
 }
 

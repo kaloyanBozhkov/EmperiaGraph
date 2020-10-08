@@ -4,6 +4,7 @@ import styles from './styles.module.scss'
 import Icon from 'UI/Icon/Icon'
 
 import Confirm from './Confirm/Confirm'
+import AddFriend from './AddFriend/AddFriend'
 
 /**
  * @param  {string} {openedModal -> name of modal to open
@@ -37,19 +38,26 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
 
   switch (modal) {
     case 'confirm': {
-      
+
       const { onConfirm, ...otherProps } = payload
       const onConfirmWithClose = (...args) => {
         onCloseModal()
 
-        // run the onSave from the modal button click, passing all arguments
         onConfirm(...args)
       }
 
-      content = <Confirm onConfirm={onConfirmWithClose} onCancel={onCloseModal} onSave={onConfirmWithClose} {...otherProps} />
+      content = <Confirm onCancel={onCloseModal} onSave={onConfirmWithClose} {...otherProps} />
       break
     }
     case 'addFriend': {
+      const { onAddFriend, ...otherProps } = payload
+      const onAddFriendWithClose = (...args) => {
+        onCloseModal()
+
+        onAddFriend(...args)
+      }
+
+      content = <AddFriend onCancel={onCloseModal} onSave={onAddFriendWithClose} {...otherProps} />
 
       break
     }

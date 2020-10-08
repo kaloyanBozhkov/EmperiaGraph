@@ -34,6 +34,13 @@ const setData = (state, { operation, payload }) => {
         connections: state.connections.filter(({ source, target }) => source.id !== payload.friendId && target.id !== payload.friendId),
         isPending: false,
       }
+    case 'CREATE_FRIEND':
+      //if create, update local state to include the newly created firend
+      return {
+        ...state,
+        friends: [ ...state.friends, payload.friendData ],
+        isPending: false,
+      }
     default:
       return state
   }
@@ -58,9 +65,9 @@ const dashboardReportsReducer = (state = initialState, { type, payload } = {}) =
       return setPending(state, 'get')
     case type.includes('DELETE'):
       return setPending(state, 'delete')
-    case type.includes('UPDATE'):
+    case type.includes('PUT'):
       return setPending(state, 'update')
-    case type.includes('CREATE'):
+    case type.includes('POST'):
       return setPending(state, 'create')
     case REQUEST_FRIEND_FAIL || REQUEST_CONNECTIONS_FAIL || REQUEST_FORMATTED_DATA_FAIL:
       return setFailed(state, payload)
