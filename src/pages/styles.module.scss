@@ -3,5 +3,5 @@
 
 .main {
     height: 100%;
-    @include animate(opacityIn, 1s, .2s);
+    @include animate(opacityIn, 1s, 0.2s);
 }

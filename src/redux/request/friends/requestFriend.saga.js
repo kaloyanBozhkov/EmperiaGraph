@@ -14,7 +14,6 @@ export function* requestFriendSelectCreatedStart () {
     yield takeLatest(REQUEST_FRIEND_SUCCESS, requestFriendTriggers)
 }
 
-
 // Export sagas
 export function* requestFriendSagas() {
     yield all([

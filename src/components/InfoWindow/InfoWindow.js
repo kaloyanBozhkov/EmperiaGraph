@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 import Icon from '../UI/Icon/Icon'
 import Button from '../UI/Button/Button'
 
-const InfoWindow = ({ selectedFriend, clearSelectedFriend, deleteSelectedFriend, addConnections }) => {
+const InfoWindow = ({ selectedFriend, clearSelectedFriend = (f) => f, deleteSelectedFriend = (f) => f, editConnections = (f) => f }) => {
     const [showActions, setShowActions] = useState(false)
 
     // if friend not selected, do not show info window
@@ -12,7 +12,7 @@ const InfoWindow = ({ selectedFriend, clearSelectedFriend, deleteSelectedFriend,
     }
 
     // if friend selcted, get the data we need to show
-    const { firstName, lastName, sex, totalFriends, connections: { from: emperiaFriends } } = selectedFriend
+    const { firstName, lastName, sex, totalFriends, connections } = selectedFriend
 
     return (
         <>
@@ -23,12 +23,15 @@ const InfoWindow = ({ selectedFriend, clearSelectedFriend, deleteSelectedFriend,
                         <Icon icon="close" />
                     </div>
                 </div>
-                <p>Sex: {sex}</p>
-                <p>Facebook friends: {totalFriends}</p>
-                <p>Emperia friends: {emperiaFriends.length || '-'}</p>
+                <h3>- General -</h3>
+                <p>Sex: <b>{sex}</b></p>
+                <p>Facebook friends: <b>{totalFriends}</b></p>
+                <h3>- Emperia -</h3>
+                <p>Friends with: {<b>{connections.from.length}</b> || '-'}</p>
+                <p>Befriended by: {<b>{connections.to.length}</b> || '-'}</p>
                 <div className={styles.actionsArea} data-expanded={showActions ? true : undefined}>
                     {showActions && (<>
-                        <Button label="Edit friendships" onClick={() => addConnections(selectedFriend)} />
+                        <Button label="Edit friendships" onClick={() => editConnections(selectedFriend, connections)} />
                         <Button label="Delete friend & connections" onClick={() => deleteSelectedFriend(selectedFriend, `${firstName} ${lastName}`)} />
                         
                     </>)}

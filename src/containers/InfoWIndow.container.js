@@ -28,9 +28,27 @@ const mapDispatchToProps = (dispatch) => ({
       failCallback: requestFriendFail
     }))
   })),
-  editConnections: (friendId, friedName) => dispatch(openModal('editConnections', {
+  editConnections: (friendId, initialConnections) => dispatch(openModal('editConnections', {
     modalLabel: 'Edit connections',
-    onSaveEdit: () => console.log(friendId) //dispatch(removeFriend(friendId))
+    initialConnections,
+    // onRemoveConnection: () => dispatch(requestConnectionsPending({
+    //   requestConfig: {
+    //     endpoint: 'friend',
+    //     method: 'POST',
+    //     body: { id: friend.id }
+    //   },
+    //   successCallback: requestFriendSuccess,
+    //   failCallback: requestFriendFail
+    // })),
+    // onAddConnection: () => dispatch(requestConnectionsPending({
+    //   requestConfig: {
+    //     endpoint: 'friend',
+    //     method: 'POST',
+    //     body: { id: friend.id }
+    //   },
+    //   successCallback: requestFriendSuccess,
+    //   failCallback: requestFriendFail
+    // })), 
   })),
 })
 

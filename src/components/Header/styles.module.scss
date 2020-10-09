@@ -6,10 +6,11 @@
     display: flex;
     justify-content: space-between;
     height: 4rem;
-    background: linear-gradient( 45deg, darken($primary-color, 20%), $primary-color);
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, .6);
+    background: linear-gradient(45deg, darken($primary-color, 20%), $primary-color);
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
 
-    h1, h3 {
+    h1,
+    h3 {
         color: white;
         display: flex;
         align-items: center;
@@ -23,5 +24,5 @@
         padding-left: 1rem;
     }
 
-    @include animate(slideDown, .4s);
+    @include animate(slideDown, 0.4s);
 }

@@ -9,7 +9,7 @@ import Button from '~/components/UI/Button/Button'
 
 
 const validateForm = (inputs) => {
-    const [sex, ...toCheck] = Object.values(inputs)
+    const [, ...toCheck] = Object.values(inputs)
 
     return toCheck.every((value) => !!value)
 }

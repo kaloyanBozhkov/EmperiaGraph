@@ -5,6 +5,7 @@ import Icon from 'UI/Icon/Icon'
 
 import Confirm from './Confirm/Confirm'
 import AddFriend from './AddFriend/AddFriend'
+import EditConnections from './EditConnections/EditConnections'
 
 /**
  * @param  {string} {openedModal -> name of modal to open
@@ -58,6 +59,18 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
       }
 
       content = <AddFriend onCancel={onCloseModal} onSave={onAddFriendWithClose} {...otherProps} />
+
+      break
+    }
+    case 'editConnections': {
+      const { onEditConnections, ...otherProps } = payload
+      const onEditConnectionsWithClose = (...args) => {
+        onCloseModal()
+
+        onEditConnections(...args)
+      }
+
+      content = <EditConnections onCancel={onCloseModal} onSave={onEditConnectionsWithClose} {...otherProps} />
 
       break
     }
