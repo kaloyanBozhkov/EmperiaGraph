@@ -5,7 +5,7 @@ import styles from './styles.module.scss'
 import Button from '~/components/UI/Button/Button'
 import FriendList from '~/components/FriendList/FriendList'
 
-const RemoveConnections = ({ friendName, initialConnections = { from: [], to: [] }, onCancel = (f) => f, onSave = (f) => f }) => {
+const RemoveConnections = ({ friend, initialConnections = { from: [], to: [] }, onCancel = (f) => f, onSave = (f) => f }) => {
     const [removedIds, setRemovedIds] = useReducer((acc, { friendId: id, selected }) => selected ? acc.filter((selectedId) => selectedId !== id) : [...acc, id], [])
 
     const friendList = useMemo(() => {
@@ -21,7 +21,7 @@ const RemoveConnections = ({ friendName, initialConnections = { from: [], to: []
     return (
         <div className={styles.removeConnections}>
             <div className={styles.formWrapper}>
-                <p>Removing friends for {friendName}, select which friends to remove and then confirm.</p>
+                <p>Removing friends for {friend.firstName} {friend.lastName}, select which friends to remove and then confirm.</p>
                 <FriendList
                     modifier="doubleColumn"
                     friends={friendList}

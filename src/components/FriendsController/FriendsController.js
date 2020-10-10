@@ -8,7 +8,7 @@ const FriendsController = ({ onAddFriend = (f) => f, onRemoveFriend = (f) => f }
     return (
         <div className={styles.controller}>
              <Button label="Add a friend" onClick={onAddFriend} modifier={['primary', 'hoverMove']} />
-         </div>
+        </div>
     )
 }
 

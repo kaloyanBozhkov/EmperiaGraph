@@ -4,8 +4,9 @@ import styles from './styles.module.scss'
 import Icon from 'UI/Icon/Icon'
 
 import Confirm from './Confirm/Confirm'
-import AddFriend from './AddFriend/AddFriend'
+import AddEditFriend from './AddEditFriend/AddEditFriend'
 import RemoveConnections from './RemoveConnections/RemoveConnections'
+import AddConnections from './AddConnections/AddConnections'
 
 /**
  * @param  {string} {openedModal -> name of modal to open
@@ -50,7 +51,7 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
       content = <Confirm onCancel={onCloseModal} onSave={onConfirmWithClose} {...otherProps} />
       break
     }
-    case 'addFriend': {
+    case 'addEditFriend': {
       const { onAddFriend, ...otherProps } = payload
       const onAddFriendWithClose = (...args) => {
         onCloseModal()
@@ -58,7 +59,7 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
         onAddFriend(...args)
       }
 
-      content = <AddFriend onCancel={onCloseModal} onSave={onAddFriendWithClose} {...otherProps} />
+      content = <AddEditFriend onCancel={onCloseModal} onSave={onAddFriendWithClose} {...otherProps} />
 
       break
     }
@@ -67,6 +68,14 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
 
       // confirmation will trigger modal close
       content = <RemoveConnections onCancel={onCloseModal} onSave={onRemoveConnections} {...otherProps} />
+
+      break
+    }
+    case 'addConnections': {
+      const { onAddConnections, ...otherProps } = payload
+
+      // confirmation will trigger modal close
+      content = <AddConnections onCancel={onCloseModal} onSave={onAddConnections} {...otherProps} />
 
       break
     }

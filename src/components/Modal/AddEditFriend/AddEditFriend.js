@@ -7,7 +7,6 @@ import useInputHandler from '~/hooks/useInputHandler'
 import Input from '~/components/UI/Input/Input'
 import Button from '~/components/UI/Button/Button'
 
-
 const validateForm = (inputs) => Object.values(inputs).every((value) => !!value)
 
 /**
@@ -15,7 +14,7 @@ const validateForm = (inputs) => Object.values(inputs).every((value) => !!value)
  * @param {func} onCancel
  * @param {func} onSave
  */
-const AddFriend = ({ initialValues, onCancel = (f) => f, onSave = (f) => f }) => {
+const AddEditFriend = ({ initialValues, onCancel = (f) => f, onSave = (f) => f }) => {
     const [inputs, setInputs] = useInputHandler(initialValues || {
         sex: 'male',
         firstName: '',
@@ -49,4 +48,4 @@ const AddFriend = ({ initialValues, onCancel = (f) => f, onSave = (f) => f }) =>
     )
 }
 
-export default AddFriend
+export default AddEditFriend

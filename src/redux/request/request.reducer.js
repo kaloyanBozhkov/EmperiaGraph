@@ -54,6 +54,12 @@ const setData = (state, { operation, payload }) => {
         friends: state.friends.map((friend) => friend.id === payload.friend.id ? { ...friend, ...payload.friend } : friend),
         isPending: false,
       }
+    case 'CREATE_CONNETIONS':
+      return {
+        ...state,
+        ...payload, // for now { connections, friends } is returned with formatted data (instead of a saga intercepting this and firing REQUEST_FORMATTED_DATA)
+        isPending: false
+      }
     default:
       return state
   }

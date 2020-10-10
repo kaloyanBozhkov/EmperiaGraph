@@ -44,8 +44,8 @@ const InfoWindow = ({
                     {showActions && (<>
                         <Button label="Edit info" onClick={() => editFriend(selectedFriend)} />
                         <Button label="Add connections" onClick={() => addConnection(selectedFriend, getUnknownFriends(friends, getCurrentFriendIds(connections.from)))} />
-                        <Button label="Remove connections" onClick={() => removeConnection(selectedFriend, `${firstName} ${lastName}`, connections.from)} />
-                        <Button label="Delete friend & connections" onClick={() => deleteSelectedFriend(selectedFriend, `${firstName} ${lastName}`)} />
+                        <Button label="Remove connections" onClick={() => removeConnection(selectedFriend, connections.from)} />
+                        <Button label="Delete friend & connections" onClick={() => deleteSelectedFriend(selectedFriend)} />
                     </>)}
                     <button className={styles.showMoreButton} onClick={() => setShowActions(!showActions)}>{showActions ? 'Hide' : 'Show'} actions</button>
                 </div>

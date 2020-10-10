@@ -11,7 +11,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onAddFriend: () => dispatch(openModal('addFriend', { 
+  onAddFriend: () => dispatch(openModal('addEditFriend', { 
     modalLabel: 'Add Friend', 
     onAddFriend: (friendData) => dispatch(requestFriendPending({
       requestConfig: {

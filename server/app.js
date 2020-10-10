@@ -60,7 +60,7 @@ app.get('/emperia/data', (req, res) => {
   try {
     connection.query(
       `SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS};
-         SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}`,
+         SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS};`,
       (err, results, fields) => {
         if (err) {
           res.json(err)
@@ -187,18 +187,30 @@ app.post('/emperia/connections', (req, res) => {
     const sqlQuery = `INSERT INTO 
       \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
       (\`source\`,\`target\`)
-      VALUES ${connections.map(({ source, target }) => (`('${source}','${target}')`)).join(' ')}`
+      VALUES ${connections.map(({ source, target }) => (`('${source}','${target}')`)).join(' ')};
+
+      SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS};
+      SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS};`
 
     // create insertion query
     connection.query(
       sqlQuery,
-      (err, results, fields) => {
+      (err, results) => {
         if (err) {
           res.json(err)
         } else {
+
+          const [, friends, connections] = results
+          const formattedConnections = formatEdges(connections, friends)
+          const formattedFriends = formatFriends(friends, formattedConnections)
+          const connectionsFormatted = purifyConnections(formattedFriends)
+
           res.json({
-            results,
-            fields,
+            operation: 'CREATE_CONNECTIONS',
+            payload: {
+              connections: connectionsFormatted,
+              friends: formattedFriends
+            }
           })
         }
       }

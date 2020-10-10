@@ -1,4 +1,6 @@
 @import 'variables';
+@import 'keyframes';
+@import 'mixins';
 
 .menu {
     z-index: 1;
@@ -12,4 +14,6 @@
     > p {
         display: flex;
     }
+
+    @include animate(slideRight, 0.9s);
 }

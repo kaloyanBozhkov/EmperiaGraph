@@ -17,9 +17,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setSelectedFriend: (friend) => dispatch(selectFriend(friend)),
   clearSelectedFriend: () => dispatch(clearFriend()),
-  deleteSelectedFriend: (friend, friedName) => dispatch(openModal('confirm', {
+  deleteSelectedFriend: (friend) => dispatch(openModal('confirm', {
     modalLabel: 'Delete friend & connections?',
-    label: `Are you sure you want to remove ${friedName} from friends?`,
+    label: `Are you sure you want to remove ${friend.firstName} ${friend.lastName} from friends?`,
     onConfirm: () => dispatch(requestFriendPending({
       requestConfig: {
         endpoint: 'friend',
@@ -30,15 +30,27 @@ const mapDispatchToProps = (dispatch) => ({
       failCallback: requestFriendFail
     }))
   })),
-  addConnection: (f) => f,
+  addConnection: (friend, friends) => dispatch(openModal('addConnections', {
+    modalLabel: 'Add connections',
+    friends,
+    friend,
+    onAddConnections: (connections) => dispatch(requestConnectionsPending({
+      requestConfig: {
+        method: 'POST',
+        endpoint: 'connections',
+        body: { connections }
+      },
+      successCallback: requestConnectionsSuccess,
+      failCallback: requestConnectionsFail
+    }))
+  })),
   // open removeFriend modal and on save open confirm modal which then fires DELETE request
-  removeConnection: (friendId, friendName, initialConnections) => dispatch(openModal('removeConnections', {
+  removeConnection: (friend, initialConnections) => dispatch(openModal('removeConnections', {
     modalLabel: 'Remove connections',
     initialConnections,
-    friendName,
-    friendId,
+    friend,
     onRemoveConnections: (connectionIds) => dispatch(openModal('confirm', {
-      label: `Are you sure you want to delete ${connectionIds.length} connection${connectionIds.length > 1 ? 's' : ''} for ${friendName}?`,
+      label: `Are you sure you want to delete ${connectionIds.length} connection${connectionIds.length > 1 ? 's' : ''} for ${friend.firstName} ${friend.lastName}?`,
       modalLabel: 'Confirm deletetion',
       onSave: () => {
         dispatch(requestConnectionsPending({
@@ -56,8 +68,8 @@ const mapDispatchToProps = (dispatch) => ({
     }))
   })),
   // edit Friend re-uses same modal as add friend!
-  editFriend: (selectedFriend) => dispatch(openModal('addFriend', { 
-    modalLabel: 'Edit Friend', 
+  editFriend: (selectedFriend) => dispatch(openModal('addEditFriend', {
+    modalLabel: 'Edit Friend',
     initialValues: {
       sex: selectedFriend.sex,
       firstName: selectedFriend.firstName,

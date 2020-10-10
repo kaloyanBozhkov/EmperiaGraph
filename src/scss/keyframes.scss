@@ -35,3 +35,16 @@
         transform: rotate(360deg);
     }
 }
+
+@keyframes slideRight {
+    0% {
+        transform: translateX(-100%);
+    }
+    // wait for header to pop in .4s, then start anim
+    40% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
