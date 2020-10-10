@@ -102,7 +102,7 @@ app.post('/emperia/friend', (req, res) => {
       \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
       (\`firstName\`,\`lastName\`,\`totalFriends\`,\`sex\`)
       VALUES ('${friend.firstName}', '${friend.lastName}', '${friend.totalFriends}', '${friend.sex}');
-      SELECT * from  \`emperia_graph_friends\` WHERE id = LAST_INSERT_ID()`
+      SELECT * from  \`emperia_graph_friends\` WHERE \`id\` = LAST_INSERT_ID()`
 
 
     // create insertion query
@@ -125,6 +125,41 @@ app.post('/emperia/friend', (req, res) => {
           res.json({
             operation: 'CREATE_FRIEND',
             payload: { friendData } // gotta get friend data from second query due to the need of ID which is AUTO_INCREMET
+          })
+        }
+      }
+    )
+  } catch (error) {
+    res.json({ error: error.message })
+  }
+})
+
+
+// update friend
+app.put('/emperia/friend', (req, res) => {
+  try {
+
+    // get friend data
+    const friend = req.body
+
+    if (!friend.firstName || !friend.lastName || !friend.totalFriends || !friend.sex || !friend.id) {
+      throw Error('The provided friend object is invalid, make sure it has firstName, lastName, totalFriends, sex and ID.')
+    }
+
+    const sqlQuery = `UPDATE
+      \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
+      SET \`firstName\`='${friend.firstName}',\`lastName\`='${friend.lastName}',\`totalFriends\`='${friend.totalFriends}',\`sex\`='${friend.sex}'
+      WHERE \`id\` = ${friend.id}`
+
+    connection.query(
+      sqlQuery,
+      (err) => {
+        if (err) {
+          res.json(err)
+        } else {
+          res.json({
+            operation: 'UPDATE_FRIEND',
+            payload: { friend }
           })
         }
       }

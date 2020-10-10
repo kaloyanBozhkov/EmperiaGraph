@@ -6,7 +6,15 @@ import Button from '../UI/Button/Button'
 const getUnknownFriends = (allFriends, currentFriends) => allFriends.filter(({ id }) => !currentFriends.includes(id))
 const getCurrentFriendIds = (currentFriends) => currentFriends.map(({ target: id }) => id)
 
-const InfoWindow = ({ selectedFriend, friends, clearSelectedFriend = (f) => f, deleteSelectedFriend = (f) => f, addConnection = (f) => f, removeConnection = (f) => f }) => {
+const InfoWindow = ({ 
+    selectedFriend, 
+    friends, 
+    clearSelectedFriend = (f) => f, 
+    deleteSelectedFriend = (f) => f, 
+    addConnection = (f) => f, 
+    removeConnection = (f) => f,
+    editFriend = (f) => f
+}) => {
     const [showActions, setShowActions] = useState(false)
 
     // if friend not selected, do not show info window
@@ -34,8 +42,9 @@ const InfoWindow = ({ selectedFriend, friends, clearSelectedFriend = (f) => f, d
                 <p>Befriended by: {<b>{connections.to.length}</b> || '-'}</p>
                 <div className={styles.actionsArea} data-expanded={showActions ? true : undefined}>
                     {showActions && (<>
-                        <Button label="Add a connection" onClick={() => addConnection(selectedFriend, getUnknownFriends(friends, getCurrentFriendIds(connections.from)))} />
-                        <Button label="Remove a connection" onClick={() => removeConnection(selectedFriend, `${firstName} ${lastName}`, connections.from)} />
+                        <Button label="Edit info" onClick={() => editFriend(selectedFriend)} />
+                        <Button label="Add connections" onClick={() => addConnection(selectedFriend, getUnknownFriends(friends, getCurrentFriendIds(connections.from)))} />
+                        <Button label="Remove connections" onClick={() => removeConnection(selectedFriend, `${firstName} ${lastName}`, connections.from)} />
                         <Button label="Delete friend & connections" onClick={() => deleteSelectedFriend(selectedFriend, `${firstName} ${lastName}`)} />
                     </>)}
                     <button className={styles.showMoreButton} onClick={() => setShowActions(!showActions)}>{showActions ? 'Hide' : 'Show'} actions</button>

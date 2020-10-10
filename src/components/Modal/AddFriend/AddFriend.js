@@ -8,15 +8,15 @@ import Input from '~/components/UI/Input/Input'
 import Button from '~/components/UI/Button/Button'
 
 
-const validateForm = (inputs) => {
-    const [, ...toCheck] = Object.values(inputs)
+const validateForm = (inputs) => Object.values(inputs).every((value) => !!value)
 
-    return toCheck.every((value) => !!value)
-}
-
-const AddFriend = ({ onCancel = (f) => f, onSave = (f) => f }) => {
-
-    const [inputs, setInputs] = useInputHandler({
+/**
+ * @param {obj} {initialValues - This modal is re-used for edit friend.. pass initial value for existing data to show
+ * @param {func} onCancel
+ * @param {func} onSave
+ */
+const AddFriend = ({ initialValues, onCancel = (f) => f, onSave = (f) => f }) => {
+    const [inputs, setInputs] = useInputHandler(initialValues || {
         sex: 'male',
         firstName: '',
         lastName: '',
