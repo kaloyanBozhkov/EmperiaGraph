@@ -211,20 +211,19 @@ app.delete('/emperia/friend', (req, res) => {
 app.delete('/emperia/connections', (req, res) => {
   try {
 
-    const { connections = [] } = req.body
+    const { connectionIds = [] } = req.body
 
-    if (!connections.length) {
-      throw Error('Array of connections must be provided' )
+    if (!connectionIds.length) {
+      throw Error('Array of connection ids must be provided' )
     }
 
-    if (connections.filter(({ source, target }) => !source || !target).length > 0) {
-      throw Error('Array of connections must be made of { source, target } items.')
+    if (connectionIds.filter((id) => typeof id !== 'number').length > 0) {
+      throw Error('Array of connections must be made of numbers.')
     }
 
     const sqlQuery = `DELETE FROM
   \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
-  WHERE \`source\` IN (${connections.map(({ source }) => source).join(',')}) 
-  AND \`target\` IN (${connections.map(({ target }) => target).join(',')})`
+  WHERE \`id\` IN (${connectionIds.join(',')}) `
 
     // create insertion query
     connection.query(

@@ -5,16 +5,15 @@ import styles from './styles.module.scss'
 import Button from '~/components/UI/Button/Button'
 import FriendList from '~/components/FriendList/FriendList'
 
-const RemoveConnections = ({ friendId, friendName, initialConnections = { from: [], to: [] }, onCancel = (f) => f, onSave = (f) => f }) => {
+const RemoveConnections = ({ friendName, initialConnections = { from: [], to: [] }, onCancel = (f) => f, onSave = (f) => f }) => {
     const [removedIds, setRemovedIds] = useReducer((acc, { friendId: id, selected }) => selected ? acc.filter((selectedId) => selectedId !== id) : [...acc, id], [])
-    
+
     const friendList = useMemo(() => {
-        return initialConnections.map(({ targetFirstName: firstName, targetLastName: lastName, id: connectionId, target: targetId }) => {
+        return initialConnections.map(({ targetFirstName: firstName, targetLastName: lastName, id }) => {
             return {
                 firstName,
                 lastName,
-                id: targetId,
-                connectionId
+                id // this is actually connection id, not taget id. We'll re-use FriendList to render connections to friends instead of just friends
             }
         })
     }, [initialConnections])
@@ -38,7 +37,7 @@ const RemoveConnections = ({ friendId, friendName, initialConnections = { from: 
                 />
                 <Button
                     label="Commit Changes"
-                    onClick={() => onSave(removedIds.map((target) => ({ source: 1, target })))}
+                    onClick={() => onSave(removedIds)}
                     disabled={removedIds.length > 0 ? undefined : true}
                 />
             </div>

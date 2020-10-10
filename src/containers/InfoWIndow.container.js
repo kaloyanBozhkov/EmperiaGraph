@@ -39,11 +39,11 @@ const mapDispatchToProps = (dispatch) => ({
     onRemoveConnections: (connections) => dispatch(openModal('confirm', {
       label: `Are you sure you want to delete ${connections.length} connection${connections.length > 1 ? 's' : ''} for ${friendName}?`,
       modalLabel: 'Confirm delete connection',
-      onSave: () => dispatch(requestConnectionsPending({
+      onSave: (connectionIds) => dispatch(requestConnectionsPending({
         requestConfig: {
           endpoint: 'connections',
           method: 'DELETE',
-          body: { connections }
+          body: { connectionIds }
         },
         successCallback: requestConnectionsSuccess,
         failCallback: requestConnectionsFail
