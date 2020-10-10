@@ -99,11 +99,11 @@ app.post('/emperia/friend', (req, res) => {
     }
 
     const sqlQuery = `INSERT INTO 
-  \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
-  (\`firstName\`,\`lastName\`,\`totalFriends\`,\`sex\`)
-  VALUES ('${friend.firstName}', '${friend.lastName}', '${friend.totalFriends}', '${friend.sex}');
-  SELECT * from  \`emperia_graph_friends\` WHERE id = LAST_INSERT_ID()`
-  
+      \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
+      (\`firstName\`,\`lastName\`,\`totalFriends\`,\`sex\`)
+      VALUES ('${friend.firstName}', '${friend.lastName}', '${friend.totalFriends}', '${friend.sex}');
+      SELECT * from  \`emperia_graph_friends\` WHERE id = LAST_INSERT_ID()`
+
 
     // create insertion query
     connection.query(
@@ -150,9 +150,9 @@ app.post('/emperia/connections', (req, res) => {
     }
 
     const sqlQuery = `INSERT INTO 
-  \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
-  (\`source\`,\`target\`)
-  VALUES ${connections.map(({ source, target }) => (`('${source}','${target}')`)).join(' ')}`
+      \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
+      (\`source\`,\`target\`)
+      VALUES ${connections.map(({ source, target }) => (`('${source}','${target}')`)).join(' ')}`
 
     // create insertion query
     connection.query(
@@ -184,12 +184,12 @@ app.delete('/emperia/friend', (req, res) => {
     }
 
     const sqlQuery = `DELETE FROM
-    \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
-    WHERE \`source\` = ${friendId} OR \`target\` = ${friendId};
-    
-    DELETE FROM 
-    \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
-    WHERE \`id\` = ${friendId};`
+      \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
+      WHERE \`source\` = ${friendId} OR \`target\` = ${friendId};
+      
+      DELETE FROM 
+      \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS}\`
+      WHERE \`id\` = ${friendId};`
 
     // create insertion query
     connection.query(
@@ -214,7 +214,7 @@ app.delete('/emperia/connections', (req, res) => {
     const { connectionIds = [] } = req.body
 
     if (!connectionIds.length) {
-      throw Error('Array of connection ids must be provided' )
+      throw Error('Array of connection ids must be provided')
     }
 
     if (connectionIds.filter((id) => typeof id !== 'number').length > 0) {
@@ -222,21 +222,17 @@ app.delete('/emperia/connections', (req, res) => {
     }
 
     const sqlQuery = `DELETE FROM
-  \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
-  WHERE \`id\` IN (${connectionIds.join(',')}) `
+      \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
+      WHERE \`id\` IN (${connectionIds.join(',')});`
 
     // create insertion query
     connection.query(
       sqlQuery,
-      (err, results, fields) => {
+      (err) => {
         if (err) {
           res.json(err)
         } else {
-          res.json({
-            sqlQuery,
-            results,
-            fields,
-          })
+          res.json({ operation: 'DELETE_CONNECTIONS', payload: { connectionIds } })
         }
       }
     )

@@ -41,6 +41,12 @@ const setData = (state, { operation, payload }) => {
         friends: [ ...state.friends, payload.friendData ],
         isPending: false,
       }
+    case 'DELETE_CONNECTIONS':
+      return {
+        ...state,
+        connections: state.connections.filter(({ id }) => !payload.connectionIds.includes(id)),
+        isPending: false
+      }
     default:
       return state
   }
