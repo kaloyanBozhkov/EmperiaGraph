@@ -187,7 +187,7 @@ app.post('/emperia/connections', (req, res) => {
     const sqlQuery = `INSERT INTO 
       \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
       (\`source\`,\`target\`)
-      VALUES ${connections.map(({ source, target }) => (`('${source}','${target}')`)).join(' ')};
+      VALUES ${connections.map(({ source, target }) => (`('${source}','${target}')`)).join(', ')};
 
       SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS};
       SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS};`

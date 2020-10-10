@@ -9,7 +9,7 @@ import {
 import {
     REQUEST_CONNECTIONS_DELETE_PENDING,
     REQUEST_CONNECTIONS_CREATE_PENDING,
-    REQUEST_CONNECTIONS_UPDATE_PENDING,
+    REQUEST_CONNECTIONS_POST_PENDING,
     REQUEST_CONNECTIONS_GET_PENDING
 } from './connections/requestConnections.constants'
 import { REQUEST_FORMATTED_DATA_START } from './request.constants'
@@ -64,7 +64,7 @@ export function* requestFriendsStart() {
 export function* requestConnectionsStart() {
     yield takeLatest(REQUEST_CONNECTIONS_DELETE_PENDING, requestAsync)
     yield takeLatest(REQUEST_CONNECTIONS_CREATE_PENDING, requestAsync)
-    yield takeLatest(REQUEST_CONNECTIONS_UPDATE_PENDING, requestAsync)
+    yield takeLatest(REQUEST_CONNECTIONS_POST_PENDING, requestAsync)
     yield takeLatest(REQUEST_CONNECTIONS_GET_PENDING, requestAsync)
 }
 

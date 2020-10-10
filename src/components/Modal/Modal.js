@@ -73,9 +73,13 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
     }
     case 'addConnections': {
       const { onAddConnections, ...otherProps } = payload
+      const onAddConnectionsWithClose = (...args) => {
+        onCloseModal()
 
+        onAddConnections(...args)
+      }
       // confirmation will trigger modal close
-      content = <AddConnections onCancel={onCloseModal} onSave={onAddConnections} {...otherProps} />
+      content = <AddConnections onCancel={onCloseModal} onSave={onAddConnectionsWithClose} {...otherProps} />
 
       break
     }

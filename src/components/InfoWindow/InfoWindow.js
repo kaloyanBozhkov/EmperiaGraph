@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 import Icon from '../UI/Icon/Icon'
 import Button from '../UI/Button/Button'
 
-const getUnknownFriends = (allFriends, currentFriends) => allFriends.filter(({ id }) => !currentFriends.includes(id))
+const getUnknownFriends = (allFriends, currentFriends, excludeId) => allFriends.filter(({ id }) => !currentFriends.includes(id) && excludeId !== id)
 const getCurrentFriendIds = (currentFriends) => currentFriends.map(({ target: id }) => id)
 
 const InfoWindow = ({ 
@@ -43,7 +43,7 @@ const InfoWindow = ({
                 <div className={styles.actionsArea} data-expanded={showActions ? true : undefined}>
                     {showActions && (<>
                         <Button label="Edit info" onClick={() => editFriend(selectedFriend)} />
-                        <Button label="Add connections" onClick={() => addConnection(selectedFriend, getUnknownFriends(friends, getCurrentFriendIds(connections.from)))} />
+                        <Button label="Add connections" onClick={() => addConnection(selectedFriend, getUnknownFriends(friends, getCurrentFriendIds(connections.from), selectedFriend.id))} />
                         <Button label="Remove connections" onClick={() => removeConnection(selectedFriend, connections.from)} />
                         <Button label="Delete friend & connections" onClick={() => deleteSelectedFriend(selectedFriend)} />
                     </>)}
