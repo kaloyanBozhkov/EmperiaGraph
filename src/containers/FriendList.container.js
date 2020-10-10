@@ -11,7 +11,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    onSelect: (id) => dispatch(selectFriend(id))
+    onSelect: ({ friendId: id, selected }) => dispatch(selectFriend(selected ? null : id))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FriendList)

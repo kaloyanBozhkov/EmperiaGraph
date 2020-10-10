@@ -234,6 +234,7 @@ app.delete('/emperia/connections', (req, res) => {
           res.json(err)
         } else {
           res.json({
+            sqlQuery,
             results,
             fields,
           })

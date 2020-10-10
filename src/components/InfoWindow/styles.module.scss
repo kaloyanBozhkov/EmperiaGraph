@@ -79,14 +79,14 @@
     }
 
     .actionsArea {
-        max-height: 7rem;
+        max-height: 12rem;
         overflow: hidden;
         transition: all 0.5s;
         margin-top: 1rem;
         width: 100%;
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 2rem 2rem;
+        grid-template-rows: repeat(3, 2rem);
         row-gap: 1rem;
 
         &:not([data-expanded='true']) {

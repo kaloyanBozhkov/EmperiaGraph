@@ -6,10 +6,12 @@ import { getSelectedFriendData } from '~/redux/friend/friend.selector'
 
 import InfoWindow from '~/components/InfoWindow/InfoWindow'
 import { requestFriendFail, requestFriendPending, requestFriendSuccess } from '~/redux/request/friends/requestFriend.actions'
+import { requestConnectionsFail, requestConnectionsPending, requestConnectionsSuccess } from '~/redux/request/connections/requestConnections.actions'
 
 
 const mapStateToProps = (state) => ({
-  selectedFriend: getSelectedFriendData(state)
+  selectedFriend: getSelectedFriendData(state),
+  friends: state.requestReducer.friends
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -28,27 +30,25 @@ const mapDispatchToProps = (dispatch) => ({
       failCallback: requestFriendFail
     }))
   })),
-  editConnections: (friendId, initialConnections) => dispatch(openModal('editConnections', {
-    modalLabel: 'Edit connections',
+  addConnection: (f) => f,
+  removeConnection: (friendId, friendName, initialConnections) => dispatch(openModal('removeConnections', {
+    modalLabel: 'Remove connections',
     initialConnections,
-    // onRemoveConnection: () => dispatch(requestConnectionsPending({
-    //   requestConfig: {
-    //     endpoint: 'friend',
-    //     method: 'POST',
-    //     body: { id: friend.id }
-    //   },
-    //   successCallback: requestFriendSuccess,
-    //   failCallback: requestFriendFail
-    // })),
-    // onAddConnection: () => dispatch(requestConnectionsPending({
-    //   requestConfig: {
-    //     endpoint: 'friend',
-    //     method: 'POST',
-    //     body: { id: friend.id }
-    //   },
-    //   successCallback: requestFriendSuccess,
-    //   failCallback: requestFriendFail
-    // })), 
+    friendName,
+    friendId,
+    onRemoveConnections: (connections) => dispatch(openModal('confirm', {
+      label: `Are you sure you want to delete ${connections.length} connection${connections.length > 1 ? 's' : ''} for ${friendName}?`,
+      modalLabel: 'Confirm delete connection',
+      onSave: () => dispatch(requestConnectionsPending({
+        requestConfig: {
+          endpoint: 'connections',
+          method: 'DELETE',
+          body: { connections }
+        },
+        successCallback: requestConnectionsSuccess,
+        failCallback: requestConnectionsFail
+      }))
+    }))
   })),
 })
 

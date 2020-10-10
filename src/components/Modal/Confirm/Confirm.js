@@ -3,11 +3,7 @@ import React from 'react'
 import styles from './styles.module.scss'
 import Button from 'UI/Button/Button'
 
-const Confirm = ({
-  label,
-  onSave = (f) => f,
-  onCancel = (f) => f
-}) => {
+const Confirm = ({ label, onSave = (f) => f, onCancel = (f) => f }) => {
   return (
     <div className={styles.conrifm}>
       <div className={styles.contentWrapper}>

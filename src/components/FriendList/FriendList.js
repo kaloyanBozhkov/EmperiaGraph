@@ -4,6 +4,7 @@ import Input from '../UI/Input/Input'
 
 const FriendList = ({ selectedFriend, friends = [], modifier = '', onSelect = f => f }) => {
   const [search, setSearch] = useState('')
+
   return (
     <div className={[styles.friendList, styles[modifier]].join(' ').trim()}>
       <div className={styles.searchBarWrapper}>
@@ -18,18 +19,18 @@ const FriendList = ({ selectedFriend, friends = [], modifier = '', onSelect = f 
       <div className={styles.content}>
         {friends.map(({ firstName, lastName, id }) => {
           const theSearch = search.toLowerCase()
-
+          const isSelected = (selectedFriend?.constructor.prototype === Array.prototype && selectedFriend?.includes(id)) || id === selectedFriend?.id
           return (
             <div
-              className={[styles.card, styles[id === selectedFriend ? 'selected' : undefined]].join(' ').trim()}
+              key={id}
+              className={[styles.card, styles[isSelected ? 'selected' : undefined]].join(' ').trim()}
               hidden={
                 (!!search.length &&
                   !~firstName.toLowerCase().indexOf(theSearch) &&
                   !~lastName.toLowerCase().indexOf(theSearch)) ||
                 undefined
               }
-              onClick={() => onSelect(id === selectedFriend ? null : id)}
-              key={id}
+              onClick={() => onSelect({ friendId: id, selected: isSelected })}
             >
               <p>{firstName}</p>
               <p>{lastName}</p>
