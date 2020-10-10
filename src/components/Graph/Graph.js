@@ -41,7 +41,7 @@ const updateEdges = (lines, circles, texts, selectedVertexId, simulation) => {
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y)
 
-  
+
 }
 
 const updateVertices = (circles, texts, selectedVertexId) => {
@@ -67,6 +67,9 @@ const Graph = ({
 
   setSelectedVertex,
   clearSelectedVertex,
+
+  connectionStrength = -5,
+  connectionDistance = 5
 }) => {
   const edgesRef = useRef()
   const verticesRef = useRef()
@@ -81,10 +84,10 @@ const Graph = ({
             'link',
             d3
               .forceLink(edges)
-              .distance(canvasConfig.width / 5)
+              .distance(canvasConfig.width / connectionDistance)
               .id((d) => d.id)
           )
-          .force('charge', d3.forceManyBody().strength(-5))
+          .force('charge', d3.forceManyBody().strength(connectionStrength))
           .force('center', d3.forceCenter(canvasConfig.width / 2, canvasConfig.height / 2))
           .force(
             'collision',
@@ -94,7 +97,7 @@ const Graph = ({
     }
 
     return null
-  }, [canvasConfig, edges, vertices])
+  }, [canvasConfig, edges, vertices, connectionStrength, connectionDistance])
 
 
   const verticesNodes = useMemo(() => {
@@ -159,10 +162,10 @@ const Graph = ({
   // on mount set drag handler to vertices and the callback for simulation's tick to update positions of vertices and edges
   useEffect(() => {
     if (edgesRef.current && verticesRef.current && simulation) {
-      
+
       // setup dragging behavior for vertices
       d3.select(verticesRef.current).selectAll('circle').call(dragger(simulation))
-     
+
       const verticesG = d3.select(verticesRef.current)
       const circles = verticesG.selectAll('circle').data(vertices)
       const texts = verticesG.selectAll('text').data(vertices)

@@ -59,10 +59,11 @@ const mapDispatchToProps = (dispatch) => ({
             method: 'DELETE',
             body: { connectionIds }
           },
-          successCallback: requestConnectionsSuccess,
+          successCallback: (response) => requestConnectionsSuccess({ ...response, friendId: friend.id, ...friend }),
           failCallback: requestConnectionsFail
         }))
 
+        // close from here due to confirm modal being in the middle of flow
         dispatch(closeModal())
       }
     }))

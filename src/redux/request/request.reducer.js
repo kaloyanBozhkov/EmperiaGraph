@@ -24,7 +24,7 @@ const setFormattedData = (state, formattedData) => ({
   isPending: false
 })
 
-const setData = (state, { operation, payload }) => {
+const setData = (state, { operation, payload, ...otherProps }) => {
   switch (operation) {
     case 'DELETE_FRIEND':
       // if delete, update local state to exclude the deleted firend
@@ -38,14 +38,22 @@ const setData = (state, { operation, payload }) => {
       //if create, update local state to include the newly created firend
       return {
         ...state,
-        friends: [ ...state.friends, payload.friendData ],
+        friends: [...state.friends, payload.friendData],
         isPending: false,
       }
     case 'DELETE_CONNECTIONS':
       return {
         ...state,
         connections: state.connections.filter(({ id }) => !payload.connectionIds.includes(id)),
-        isPending: false
+        // update selected friend (whose connection was just rmeoved) to have expected friend.connections.from arr
+        friends: state.friends.map((friend) => friend.id === otherProps.friendId ? ({
+          ...friend,
+          connections: {
+            ...friend.connections,
+            from: friend.connections.from.filter(({ id }) => !payload.connectionIds.includes(id))
+          }
+        }) : friend),
+          isPending: false
       }
     case 'UPDATE_FRIEND':
       return {
@@ -54,7 +62,7 @@ const setData = (state, { operation, payload }) => {
         friends: state.friends.map((friend) => friend.id === payload.friend.id ? { ...friend, ...payload.friend } : friend),
         isPending: false,
       }
-    case 'CREATE_CONNETIONS':
+    case 'CREATE_CONNECTIONS':
       return {
         ...state,
         ...payload, // for now { connections, friends } is returned with formatted data (instead of a saga intercepting this and firing REQUEST_FORMATTED_DATA)

@@ -6,6 +6,7 @@ import GraphComponent from '~/components/Graph/Graph'
 
 import useWindowWidth from '~/hooks/useWindowWidth'
 import useWindowHeight from '~/hooks/useWindowHeight'
+import Controller from '~/components/Graph/Controller/Controller'
 
 const Graph = ({
   friends,
@@ -15,28 +16,47 @@ const Graph = ({
 
   setSelectedFriend,
   clearSelectedFriend,
+
+  connectionStrength,
+  changeConnectionStrength,
+
+  connectionDistance,
+  changeConnectionDistance,
 }) => {
-  console.log(friends,
-    connections,)
   const graphWrapper = useRef()
-  
+
   const canvasSize = {
     height: useWindowHeight() - 68,
     width: useWindowWidth(),
   }
 
+  const vertices = JSON.parse(JSON.stringify(friends))
+  const edges = JSON.parse(JSON.stringify(connections))
+
   return (
     <div className={styles.main} ref={graphWrapper}>
       <GraphComponent
-        vertices={friends}
-        edges={connections}
+        vertices={vertices}
+        edges={edges}
         canvasConfig={canvasSize}
 
         selectedVertex={selectedFriend}
-        
+
         setSelectedVertex={setSelectedFriend}
         clearSelectedVertex={clearSelectedFriend}
+
+        connectionStrength={connectionStrength}
+        connectionDistance={connectionDistance}
       />
+      <div className={styles.controlsWrapper}>
+        <Controller
+          connectionStrength={connectionStrength}
+          changeConnectionStrength={changeConnectionStrength}
+
+          connectionDistance={connectionDistance}
+          changeConnectionDistance={changeConnectionDistance}
+        />
+      </div>
     </div>
   )
 }
