@@ -47,6 +47,13 @@ const setData = (state, { operation, payload }) => {
         connections: state.connections.filter(({ id }) => !payload.connectionIds.includes(id)),
         isPending: false
       }
+    case 'UPDATE_FRIEND':
+      return {
+        ...state,
+        // update friends arr, replace firstName, lastName, totlaFriends and sex of updated friend, but keep other properties liek connections.to and connections.from
+        friends: state.friends.map((friend) => friend.id === payload.friend.id ? { ...friend, ...payload.friend } : friend),
+        isPending: false,
+      }
     default:
       return state
   }
