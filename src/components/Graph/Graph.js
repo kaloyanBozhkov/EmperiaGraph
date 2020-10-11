@@ -42,7 +42,7 @@ const updateEdges = (lines, circles, texts, selectedVertexId, simulation) => {
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y)
     .on('mouseenter', (d) => {
-      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
+      if (selectedVertexId === d.source.id) {
         simulation.stop()
 
         circles.attr('r', function (circleD) {
@@ -162,7 +162,16 @@ const updateVertices = (circles, texts, selectedVertexId, selectedVertex) => {
   circles
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
-    .attr('r', (d) => d.id === selectedVertexId ? 10 : 5)
+    .attr('r', function (d) {
+      if (d.id === selectedVertexId) {
+        
+        d3.select(this).raise()
+
+        return 10
+      }
+
+      return 5
+    })
     .style('opacity', (d) => {
       if (
         d.id === selectedVertexId || selectedVertex?.connections.from.find(({ target }) => target === +d.id)
@@ -176,7 +185,16 @@ const updateVertices = (circles, texts, selectedVertexId, selectedVertex) => {
 
 
   texts
-    .attr('selected', (d) => d.id === selectedVertexId ? true : undefined)
+    .attr('selected', function (d) {
+      if (d.id === selectedVertexId) {
+
+        d3.select(this).raise()
+
+        return true
+      }
+
+      return null
+    })
     .attr('connected', (d) => selectedVertex?.connections.from.find(({ target }) => target === +d.id) ? true : undefined)
     .attr('x', function (d) { return d.x - (this.getBBox().width / 2) })
     .attr('y', function (d) { return d.y - this.getBBox().height })
@@ -316,24 +334,3 @@ const Graph = ({
 }
 
 export default Graph
-
-
-// const zoomFitter = (config,paddingPercent, transitionDuration) => {
-// 	var bounds = root.node().getBBox();
-// 	var parent = root.node().parentElement;
-// 	var fullWidth = parent.clientWidth,
-// 	    fullHeight = parent.clientHeight;
-// 	var width = bounds.width,
-// 	    height = bounds.height;
-// 	var midX = bounds.x + width / 2,
-// 	    midY = bounds.y + height / 2;
-// 	if (width == 0 || height == 0) return; // nothing to fit
-// 	var scale = (paddingPercent || 0.75) / Math.max(width / fullWidth, height / fullHeight);
-// 	var translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
-
-// 	console.trace("zoomFit", translate, scale);
-// 	root
-// 		.transition()
-// 		.duration(transitionDuration || 0) // milliseconds
-// 		.call(zoom.translate(translate).scale(scale).event);
-// }

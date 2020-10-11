@@ -5,7 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faSpinner,
   faTimes,
-  faCog
+  faCog,
+  faPlus,
+  faMinus
 } from '@fortawesome/free-solid-svg-icons'
 
 const Icon = ({ icon }) => {
@@ -16,6 +18,10 @@ const Icon = ({ icon }) => {
       return <FontAwesomeIcon icon={faTimes} />
     case 'cog':
       return <FontAwesomeIcon icon={faCog} />
+    case 'plus':
+      return <FontAwesomeIcon icon={faPlus} />
+    case 'minus':
+      return <FontAwesomeIcon icon={faMinus} />
     default:
       return <i>Icon not found</i>
   }
