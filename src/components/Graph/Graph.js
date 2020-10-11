@@ -104,12 +104,13 @@ const updateEdges = (lines, circles, texts, selectedVertexId, simulation) => {
         circles.attr('r', function (circleD) {
           if (circleD.id === circleVertex.id || circleD.id === selectedVertexId) {
 
-            // put circle on top of rest
-            d3.select(this).raise()
 
             return 15
           }
 
+          // put circle on top of rest
+          d3.select(this).raise()
+          
           return d3.select(this).attr('r')
         })
 
@@ -120,6 +121,15 @@ const updateEdges = (lines, circles, texts, selectedVertexId, simulation) => {
               // put text on top for text belonging to vertices connexted to selected vertex
               d3.select(this).raise()
 
+              return 'true'
+            }
+
+            return null
+          })
+
+        lines
+          .attr('active', (d) => {
+            if (d.source.id === circleVertex.id || d.target.id === circleVertex.id) {
               return 'true'
             }
 
@@ -140,6 +150,8 @@ const updateEdges = (lines, circles, texts, selectedVertexId, simulation) => {
         })
 
         texts.attr('connected-active', null)
+
+        lines.attr('active', null)
       }
     })
 

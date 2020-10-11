@@ -159,7 +159,10 @@ app.put('/emperia/friend', (req, res) => {
         } else {
           res.json({
             operation: 'UPDATE_FRIEND',
-            payload: { friend }
+            payload: { 
+              ...friend,
+              totalFriends: +friend.totalFriends
+            }
           })
         }
       }

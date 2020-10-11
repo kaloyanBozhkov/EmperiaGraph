@@ -20,7 +20,6 @@ export const getPurifiedConnections = createSelector(
     (connections, selectedFriend) => {
 
         // if friend is selected, remove connections connecting to selected friend from other friends that the selected friend is already connected to
-
         if (selectedFriend) {
             const justTargetIDs = selectedFriend.connections.from.map(({ target }) => target)
 

@@ -4,7 +4,7 @@
     stroke: rgb(144, 144, 144);
     cursor: pointer;
 
-    &:hover {
+    &:hover, &[active] {
       stroke: rgb(0, 0, 0);
     }
   }
