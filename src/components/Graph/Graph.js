@@ -34,27 +34,140 @@ const dragger = (simulation) => {
 }
 
 const updateEdges = (lines, circles, texts, selectedVertexId, simulation) => {
+
   lines
     .attr('selected', (d) => (d.source.id === selectedVertexId ? true : undefined))
     .attr('x1', (d) => d.source.x)
     .attr('y1', (d) => d.source.y)
     .attr('x2', (d) => d.target.x)
     .attr('y2', (d) => d.target.y)
+    .on('mouseenter', (d) => {
+      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
+        simulation.stop()
 
+        circles.attr('r', function (circleD) {
+          if (circleD.id === d.source.id || circleD.id === d.target.id) {
+
+            // put circle on top of rest
+            d3.select(this).raise()
+
+            return 15
+          }
+
+          return 5
+        })
+
+        texts
+          .attr('connected-active', function (textD) {
+            if (textD.id === d.target.id) {
+
+              // put text on top for text belonging to vertices connexted to selected vertex
+              d3.select(this).raise()
+
+              return 'true'
+            }
+
+            return null
+          })
+      }
+    })
+    .on('mouseover', function (hoveredEdge) {
+      // if edge hovered is for selected vertex
+      if (selectedVertexId === hoveredEdge.source.id || hoveredEdge.target.id === selectedVertexId) {
+        d3.select(this).raise()
+      }
+    })
+    .on('mouseleave', (d) => {
+      if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
+        simulation.restart()
+
+        circles.attr('r', (circleD) => {
+          if (circleD.id === selectedVertexId) {
+            return 10
+          }
+
+          return 5
+        })
+
+        texts.attr('connected-active', null)
+      }
+    })
+
+
+
+  circles
+    .on('mouseenter', (circleVertex) => {
+      if (circleVertex.connections.to.find(({ source: sourceId }) => sourceId === selectedVertexId)) {
+
+        simulation.stop()
+
+        circles.attr('r', function (circleD) {
+          if (circleD.id === circleVertex.id || circleD.id === selectedVertexId) {
+
+            // put circle on top of rest
+            d3.select(this).raise()
+
+            return 15
+          }
+
+          return d3.select(this).attr('r')
+        })
+
+        texts
+          .attr('connected-active', function (textD) {
+            if (textD.id === circleVertex.id) {
+
+              // put text on top for text belonging to vertices connexted to selected vertex
+              d3.select(this).raise()
+
+              return 'true'
+            }
+
+            return null
+          })
+      }
+    })
+    .on('mouseleave', (circleVertex) => {
+      if (circleVertex.connections.to.find(({ source: sourceId }) => sourceId === selectedVertexId)) {
+        simulation.restart()
+
+        circles.attr('r', function (circleD) {
+          if (circleD.id === circleVertex.id) {
+            return 10
+          }
+
+          return 5
+        })
+
+        texts.attr('connected-active', null)
+      }
+    })
 
 }
 
-const updateVertices = (circles, texts, selectedVertexId) => {
+const updateVertices = (circles, texts, selectedVertexId, selectedVertex) => {
+
   circles
     .attr('cx', (d) => d.x)
     .attr('cy', (d) => d.y)
+    .attr('r', (d) => d.id === selectedVertexId ? 10 : 5)
+    .style('opacity', (d) => {
+      if (
+        d.id === selectedVertexId || selectedVertex?.connections.from.find(({ target }) => target === +d.id)
+      ) {
+        return 1
+      } else if (!selectedVertexId) {
+        return null
+      }
+      return 0.45
+    })
+
 
   texts
     .attr('selected', (d) => d.id === selectedVertexId ? true : undefined)
-    .attr('x', function (d) {
-      return d.x - this.getBBox().width / 2
-    })
-    .attr('y', (d) => d.id === selectedVertexId ? d.y - 20 : d.y + 20)
+    .attr('connected', (d) => selectedVertex?.connections.from.find(({ target }) => target === +d.id) ? true : undefined)
+    .attr('x', function (d) { return d.x - (this.getBBox().width / 2) })
+    .attr('y', function (d) { return d.y - this.getBBox().height })
 }
 
 const Graph = ({
@@ -115,21 +228,14 @@ const Graph = ({
 
     return simulation.nodes().map((vertex) => {
 
-      const opacity = !selectedVertexId ? null : (
-        vertex.id === selectedVertexId || selectedVertex?.connections?.from?.find(({ target: { id } }) => id === vertex.id) ?
-          1 : .45
-      )
+      const opacity = (vertex.id === selectedVertexId || selectedVertex?.connections.from.find(({ target: { id } }) => id === vertex.id)) ? 1 : .45
 
       return (
         <Vertex
           key={vertex.id}
           text={vertex.label}
           sex={vertex.sex}
-          selected={selectedVertexId === vertex.id}
           circleStyle={{
-            opacity
-          }}
-          textStyle={{
             opacity
           }}
           onClick={() => vertexSelectHandler(vertex.id)}
@@ -144,9 +250,7 @@ const Graph = ({
     // if edge starting from selected vertex, set its weight
     const strokeWidth = edge.source.id === selectedVertexId ? edge.weight : 1
 
-    const opacity = !selectedVertexId ? null : (
-      (selectedVertex?.connections?.from?.find(({ id }) => id === edge.id)) ? 1 : .45
-    )
+    const opacity = (selectedVertexId === edge.source.id || selectedVertexId === edge.target.id) ? 1 : .45
 
     return (
       <Edge
@@ -157,29 +261,33 @@ const Graph = ({
         }}
       />
     )
-  }), [edges, selectedVertex, selectedVertexId])
+  }), [edges, selectedVertexId])
 
   // on mount set drag handler to vertices and the callback for simulation's tick to update positions of vertices and edges
   useEffect(() => {
     if (edgesRef.current && verticesRef.current && simulation) {
 
-      // setup dragging behavior for vertices
-      d3.select(verticesRef.current).selectAll('circle').call(dragger(simulation))
-
       const verticesG = d3.select(verticesRef.current)
+      // setup dragging behavior for vertices & their texts
+      verticesG
+        .selectAll('circle').call(dragger(simulation))
+
+      verticesG
+        .selectAll('text').call(dragger(simulation))
+
       const circles = verticesG.selectAll('circle').data(vertices)
       const texts = verticesG.selectAll('text').data(vertices)
       const lines = d3.select(edgesRef.current).selectAll('line').data(edges)
 
       // when simulation progressses (each tick) re-renderthe edges and vertices with updated position
       simulation.on('tick', () => {
-        updateEdges(lines, circles, texts, selectedVertexId, simulation, verticesRef.current)
-        updateVertices(circles, texts, selectedVertexId)
+        updateVertices(circles, texts, selectedVertexId, selectedVertex)
+        updateEdges(lines, circles, texts, selectedVertexId, simulation)
       })
 
       return () => simulation.stop()
     }
-  }, [simulation, edges, vertices, selectedVertexId])
+  }, [simulation, edges, vertices, selectedVertexId, selectedVertex])
 
   return (
     <div className={styles.graph}>
@@ -196,3 +304,24 @@ const Graph = ({
 }
 
 export default Graph
+
+
+// const zoomFitter = (config,paddingPercent, transitionDuration) => {
+// 	var bounds = root.node().getBBox();
+// 	var parent = root.node().parentElement;
+// 	var fullWidth = parent.clientWidth,
+// 	    fullHeight = parent.clientHeight;
+// 	var width = bounds.width,
+// 	    height = bounds.height;
+// 	var midX = bounds.x + width / 2,
+// 	    midY = bounds.y + height / 2;
+// 	if (width == 0 || height == 0) return; // nothing to fit
+// 	var scale = (paddingPercent || 0.75) / Math.max(width / fullWidth, height / fullHeight);
+// 	var translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+
+// 	console.trace("zoomFit", translate, scale);
+// 	root
+// 		.transition()
+// 		.duration(transitionDuration || 0) // milliseconds
+// 		.call(zoom.translate(translate).scale(scale).event);
+// }

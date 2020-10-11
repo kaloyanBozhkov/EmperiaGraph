@@ -4,14 +4,30 @@
 .text {
   font-size: 0.6rem;
   transition: font-size 400ms;
+  opacity: 0.45;
 
   &[selected] {
     font-size: 1rem;
     font-weight: bolder;
+    opacity:1;
   }
-  &[edge-hovered] {
-    font-size: 1.3rem;
+
+  &[connected] {
+    font-size: 0.7rem;
     font-weight: bolder;
+    opacity: .65;
+  }
+
+  &[connected-active] {
+    transform: translateY(-10px) translateX(-15px);
+    font-size: 1rem;
+    font-weight: bolder;
+    opacity: 1;
+    fill: white;
+    stroke: black;
+    stroke-width: 1;
+    stroke-opacity: .75;
+    stroke-linecap: round;
   }
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */

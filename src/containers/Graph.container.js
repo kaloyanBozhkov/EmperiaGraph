@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 
 import { openModal } from '~/redux/modal/modal.actions'
 import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
-import { getSelectedFriendData } from '~/redux/friend/friend.selector'
+import { getPurifiedConnections, getSelectedFriendData } from '~/redux/friend/friend.selector'
 import { setConnectionDistance, setConnectionStrength } from '~/redux/graph/graph.actions'
 
 import Graph from '~/pages/Graph'
@@ -10,7 +10,7 @@ import Graph from '~/pages/Graph'
 const mapStateToProps = (state) => ({
   selectedFriend: getSelectedFriendData(state),
   friends: state.requestReducer.friends,
-  connections: state.requestReducer.connections,
+  connections: getPurifiedConnections(state),
   connectionStrength: state.graphReducer.connectionStrength,
   connectionDistance: state.graphReducer.connectionDistance,
 })
