@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { compose } from 'redux'
 
 import { openModal } from '~/redux/modal/modal.actions'
 import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
@@ -7,12 +8,17 @@ import { setConnectionDistance, setConnectionStrength } from '~/redux/graph/grap
 
 import Graph from '~/pages/Graph'
 
+import withComponentLoading from '~/hoc/withComponentLoading'
+
 const mapStateToProps = (state) => ({
   selectedFriend: getSelectedFriendData(state),
   friends: state.requestReducer.friends,
   connections: getPurifiedConnections(state),
+  isLoading: state.requestReducer.isPending,
+  loadingMsg: 'Loading..',
   connectionStrength: state.graphReducer.connectionStrength,
   connectionDistance: state.graphReducer.connectionDistance,
+  // withoutMountingAnimation: state.requestReducer.isPending
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -24,4 +30,7 @@ const mapDispatchToProps = (dispatch) => ({
   addConnections: (friendId) => dispatch(openModal('addConnections', { modalLabel: 'Add connections', friendId })),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Graph)
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withComponentLoading
+)(Graph)

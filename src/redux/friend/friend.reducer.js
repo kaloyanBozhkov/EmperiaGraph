@@ -1,11 +1,11 @@
-import { CLEAR_FRIEND, SELECT_FRIEND, SET_FRIENDS } from './friend.constants'
+import { CLEAR_FRIEND, SELECT_FRIEND } from './friend.constants'
 
 const initialState = {
   selectedFriend: null,
-  friends: []
+  // friends: []
 }
 
-const setFriends = (state, friends) => ({ ...state, friends })
+// const setFriends = (state, friends) => ({ ...state, friends })
 
 const clearFriend = (state) => ({ ...state, selectedFriend: null })
 
@@ -16,8 +16,8 @@ const selectFriend = (state, friendId) => ({
 
 const friendReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case SET_FRIENDS:
-      return setFriends(state, action.payload)
+    // case SET_FRIENDS:
+    //   return setFriends(state, action.payload)
     case CLEAR_FRIEND:
       return clearFriend(state)
     case SELECT_FRIEND:

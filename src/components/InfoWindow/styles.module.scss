@@ -79,6 +79,7 @@
     }
 
     .actionsArea {
+        position: relative;
         max-height: 15rem;
         overflow: hidden;
         transition: all 0.5s;
@@ -93,6 +94,10 @@
             max-height: 2rem;
             display: flex;
         }
+    }
+
+    > div:last-of-type {
+        flex: 1;
     }
 }
 

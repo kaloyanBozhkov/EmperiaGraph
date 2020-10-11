@@ -25,3 +25,11 @@ button {
   cursor: pointer;
   outline: none;
 }
+
+html, body, #root, .App {
+  height: 100%;
+}
+
+.App {
+  display: flex;
+}

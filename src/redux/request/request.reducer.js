@@ -9,7 +9,7 @@ import {
   REQUEST_CONNECTIONS_FAIL,
 } from './connections/requestConnections.constants'
 
-import { REQUEST_FORMATTED_DATA_FAIL, REQUEST_FORMATTED_DATA_START, REQUEST_FORMATTED_DATA_SUCCESS } from './request.constants'
+import { REQUEST_FORMATTED_DATA_FAIL, REQUEST_FORMATTED_DATA_SUCCESS } from './request.constants'
 
 const initialState = {
   isPending: false,
@@ -87,32 +87,32 @@ const setFailed = (state, error) => ({
 
 const dashboardReportsReducer = (state = initialState, { type, payload } = {}) => {
 
+  if (type.includes('GET')) {
+    return setPending(state, 'get')
+  } else if (type.includes('DELETE')) {
+    return setPending(state, 'delete')
+  } else if (type.includes('PUT')) {
+    return setPending(state, 'update')
+  } else if (type.includes('POST')) {
+    return setPending(state, 'create')
+  } else if ([REQUEST_FRIEND_FAIL, REQUEST_CONNECTIONS_FAIL, REQUEST_FORMATTED_DATA_FAIL].includes(type)) {
+    return setFailed(state, payload)
+  }
+
   switch (type) {
-    case type.includes('GET') || REQUEST_FORMATTED_DATA_START:
-      return setPending(state, 'get')
-    case type.includes('DELETE'):
-      return setPending(state, 'delete')
-    case type.includes('PUT'):
-      return setPending(state, 'update')
-    case type.includes('POST'):
-      return setPending(state, 'create')
-    case REQUEST_FRIEND_FAIL || REQUEST_CONNECTIONS_FAIL || REQUEST_FORMATTED_DATA_FAIL:
-      return setFailed(state, payload)
     case REQUEST_FRIEND_SUCCESS:
       if (payload.operation) {
         return setData(state, payload)
       }
-
       return setFormattedData(state, { friends: payload })
     case REQUEST_CONNECTIONS_SUCCESS:
       if (payload.operation) {
         return setData(state, payload)
       }
-
       return setFormattedData(state, { connections: payload })
     case REQUEST_FORMATTED_DATA_SUCCESS:
       return setFormattedData(state, payload)
-    default:
+    default: 
       return state
   }
 }

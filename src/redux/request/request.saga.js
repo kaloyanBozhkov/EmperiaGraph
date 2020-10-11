@@ -12,9 +12,11 @@ import {
     REQUEST_CONNECTIONS_POST_PENDING,
     REQUEST_CONNECTIONS_GET_PENDING
 } from './connections/requestConnections.constants'
-import { REQUEST_FORMATTED_DATA_START } from './request.constants'
+import { REQUEST_FORMATTED_DATA_START, REQUEST_RETRY } from './request.constants'
 
 import requestBuilder from '~/helpers/requestBuilder'
+import { requestRetry } from './request.actions'
+import { openModal } from '../modal/modal.actions'
 
 const createRequest = ({ method, body, endpoint }) => {
 
@@ -49,7 +51,18 @@ export function* requestAsync({ payload: { requestConfig, successCallback, failC
         
         yield put(successCallback(response))
     } catch (error) {
-        yield put(failCallback(error.message))
+        yield put(openModal('errorModal', {
+            modalLabel: 'Oops! Something went wrong :(',
+            label: 'Could not successfully contact the server.. he is shy so give him some time to man up!',
+            error: error.message,
+            errorPreText: "If you're curious.. his void is all about",
+
+            // allow user to retry action
+            onRetry: (dispatch) => dispatch(requestRetry({ requestConfig, successCallback, failCallback })),
+
+            // only after closing modal trigger set the error in reducer
+            onCloseTriggerFail: (dispatch) => dispatch(failCallback(error.message))
+        }))
     }
 }
 
@@ -70,8 +83,8 @@ export function* requestConnectionsStart() {
 
 export function* requestDataStart() {
     yield takeLatest(REQUEST_FORMATTED_DATA_START, requestAsync)
+    yield takeLatest(REQUEST_RETRY, requestAsync)
 }
-
 
 // Export sagas
 export function* requestSagas() {

@@ -278,7 +278,7 @@ const Graph = ({
   // on mount set drag handler to vertices and the callback for simulation's tick to update positions of vertices and edges
   useEffect(() => {
     if (edgesRef.current && verticesRef.current && simulation) {
-
+      
       const verticesG = d3.select(verticesRef.current)
       // setup dragging behavior for vertices & their texts
       verticesG

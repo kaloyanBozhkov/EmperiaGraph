@@ -21,27 +21,36 @@ const RemoveConnections = ({ friend, initialConnections = { from: [], to: [] }, 
     return (
         <div className={styles.removeConnections}>
             <div className={styles.formWrapper}>
-                <p>Removing friends for {friend.firstName} {friend.lastName}, select which friends to remove and then confirm.</p>
-                <FriendList
-                    modifier="doubleColumn"
-                    friends={friendList}
-                    selectedFriend={removedIds}
-                    onSelect={setRemovedIds}
-                />
-            </div>
+                {friendList.length ? (
+                    <>
+                        <p>Removing friends for {friend.firstName} {friend.lastName}, select which friends to remove and then confirm.</p>
+                        <FriendList
+                            modifier="doubleColumn"
+                            friends={friendList}
+                            selectedFriend={removedIds}
+                            onSelect={setRemovedIds}
+                        />
+                    </>
+                ) : (
+                        <p>There are no friends to remove for {friend.firstName} {friend.lastName} since no connections have been set yet.</p>
+                    )
+                }
+            </div >
             <div className={styles.btnArea}>
                 <Button
                     label="Cancel"
                     onClick={onCancel}
                     modifier="secondary"
                 />
-                <Button
-                    label="Commit Changes"
-                    onClick={() => onSave(removedIds)}
-                    disabled={removedIds.length > 0 ? undefined : true}
-                />
+                {friendList.length ? (
+                    <Button
+                        label="Commit Changes"
+                        onClick={() => onSave(removedIds)}
+                        disabled={removedIds.length > 0 ? undefined : true}
+                    />
+                ) : null}
             </div>
-        </div>
+        </div >
     )
 }
 

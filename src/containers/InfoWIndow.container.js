@@ -3,15 +3,15 @@ import { connect } from 'react-redux'
 import { closeModal, openModal } from '~/redux/modal/modal.actions'
 import { selectFriend, clearFriend } from '~/redux/friend/friend.actions'
 import { getSelectedFriendData } from '~/redux/friend/friend.selector'
-
-import InfoWindow from '~/components/InfoWindow/InfoWindow'
 import { requestFriendFail, requestFriendPending, requestFriendSuccess } from '~/redux/request/friends/requestFriend.actions'
 import { requestConnectionsFail, requestConnectionsPending, requestConnectionsSuccess } from '~/redux/request/connections/requestConnections.actions'
 
+import InfoWindow from '~/components/InfoWindow/InfoWindow'
 
 const mapStateToProps = (state) => ({
   selectedFriend: getSelectedFriendData(state),
-  friends: state.requestReducer.friends
+  friends: state.requestReducer.friends,
+  isLoading: state.requestReducer.isPending,
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -75,7 +75,7 @@ const mapDispatchToProps = (dispatch) => ({
       sex: selectedFriend.sex,
       firstName: selectedFriend.firstName,
       lastName: selectedFriend.lastName,
-      totalFriends: selectedFriend.totalFriends,
+      totalFriends: +selectedFriend.totalFriends,
       id: selectedFriend.id
     },
     onAddFriend: (friendData) => dispatch(requestFriendPending({

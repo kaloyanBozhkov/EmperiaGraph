@@ -1,0 +1,41 @@
+@import 'variables';
+@import 'mixins';
+@import 'keyframes';
+
+.overlayWrapper {
+    position: relative;
+
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+
+    .overlay {
+        height: 100%;
+        width: 100%;
+        opacity: 0.7;
+        pointer-events: none;
+        filter: blur(3px);
+    }
+
+    .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bolder;
+        text-align: center;
+        p {
+            opacity: 0.5;
+        }
+
+        svg {
+            margin-bottom: 1rem;
+            @include animate(spin, 1s);
+            animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+            animation-iteration-count: infinite;
+            font-size: 2.5rem;
+            color: $primary-color;
+        }
+    }
+}

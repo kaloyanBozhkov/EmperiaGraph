@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
 import styles from './styles.module.scss'
 import Icon from 'UI/Icon/Icon'
@@ -7,6 +8,7 @@ import Confirm from './Confirm/Confirm'
 import AddEditFriend from './AddEditFriend/AddEditFriend'
 import RemoveConnections from './RemoveConnections/RemoveConnections'
 import AddConnections from './AddConnections/AddConnections'
+import ErrorModal from './ErrorModal/ErrorModal'
 
 /**
  * @param  {string} {openedModal -> name of modal to open
@@ -14,6 +16,8 @@ import AddConnections from './AddConnections/AddConnections'
  * @param  {fn} onCloseModal -> fn to call in order to close modal
  */
 export const Modal = ({ modal, data = {}, onCloseModal }) => {
+
+  const dispatcher = useDispatch()
 
   // handle escape for modal close
   useEffect(() => {
@@ -44,7 +48,6 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
       const { onConfirm, ...otherProps } = payload
       const onConfirmWithClose = (...args) => {
         onCloseModal()
-
         onConfirm(...args)
       }
 
@@ -55,7 +58,6 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
       const { onAddFriend, ...otherProps } = payload
       const onAddFriendWithClose = (...args) => {
         onCloseModal()
-
         onAddFriend(...args)
       }
 
@@ -75,12 +77,26 @@ export const Modal = ({ modal, data = {}, onCloseModal }) => {
       const { onAddConnections, ...otherProps } = payload
       const onAddConnectionsWithClose = (...args) => {
         onCloseModal()
-
         onAddConnections(...args)
       }
       // confirmation will trigger modal close
       content = <AddConnections onCancel={onCloseModal} onSave={onAddConnectionsWithClose} {...otherProps} />
 
+      break
+    }
+    case 'errorModal': {
+      const { onRetry, onCloseTriggerFail, ...otherProps } = payload
+      const onRetryWithClose = (...args) => {
+        onCloseModal()
+        onRetry(...args)
+      }
+
+      const onCloseWithTriggerFail = (...args) => {
+        onCloseModal()
+        onCloseTriggerFail(...args)
+      }
+
+      content = <ErrorModal onCancel={() => onCloseWithTriggerFail(dispatcher)} onRetry={() => onRetryWithClose(dispatcher)} {...otherProps} />
       break
     }
     default:

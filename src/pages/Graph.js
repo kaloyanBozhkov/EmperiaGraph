@@ -22,6 +22,8 @@ const Graph = ({
 
   connectionDistance,
   changeConnectionDistance,
+
+  withoutMountingAnimation
 }) => {
   const graphWrapper = useRef()
 
@@ -34,7 +36,7 @@ const Graph = ({
   const edges = JSON.parse(JSON.stringify(connections))
 
   return (
-    <div className={styles.main} ref={graphWrapper}>
+    <div className={[styles.main, withoutMountingAnimation ? styles.withoutMountingAnimation : undefined].join(' ').trim()} ref={graphWrapper}>
       <GraphComponent
         vertices={vertices}
         edges={edges}

@@ -1,5 +1,5 @@
 import { all, call } from 'redux-saga/effects'
-import { requestSagas } from '~/redux/request/request.saga'
+import { requestSagas } from './request/request.saga'
 import { requestFriendSagas } from './request/friends/requestFriend.saga'
 
 function* rootSaga() {
