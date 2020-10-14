@@ -1,0 +1,97 @@
+@namespace inkscape "http://www.inkscape.org/namespaces";
+
+.zoomController {
+    display: flex;
+    justify-content: space-evenly;
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    width: 5rem;
+    height: 2rem;
+    column-gap: 0.5rem;
+    > button {
+        padding: 0;
+    }
+}
+
+.graph {
+    circle {
+        cursor: pointer;
+        stroke-width: 1.5px;
+        stroke: white;
+        
+        &[sex='male'] {
+            fill: #588BAE;
+        }
+
+        &[sex='female'] {
+            fill: #FE7F9D;
+        }
+        &[friend='selected'],
+        &[friend='connected'],
+        &[friend='default'] {
+            opacity: 1;
+        }
+        &[friend='unknown'] {
+            opacity: 0.45;
+        }
+    }
+
+    text {
+        transition: font-size 400ms;
+
+
+        &[friend='default'] {
+            font-size: 0.6rem;
+            opacity: 0.45;
+        }
+        &[friend='selected'] {
+            font-size: 1rem;
+            font-weight: bolder;
+            opacity: 1;
+        }
+        &[friend='connected'] {
+            font-size: 0.7rem;
+            font-weight: bolder;
+            opacity: 0.65;
+        }
+        &[friend='unknown'] {
+            font-size: 0.6rem;
+            opacity: 0.15;
+        }
+
+        // hover on a line or node
+        &[active='true'] {
+            transform: translateY(-10px) translateX(-15px);
+            font-size: 1rem;
+            font-weight: bolder;
+            opacity: 1;
+            fill: white;
+            stroke: black;
+            stroke-width: 1;
+            stroke-opacity: 0.75;
+            stroke-linecap: round;
+        }
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+    }
+
+    line {
+        stroke: rgba(0, 0, 0, 0.05);
+
+        &[selected] {
+            stroke: rgb(144, 144, 144);
+            cursor: pointer;
+
+            &:hover,
+            &[active] {
+                stroke: rgb(0, 0, 0);
+            }
+        }
+    }
+}
