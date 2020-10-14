@@ -95,7 +95,9 @@ const svgConfigs = {
           selectedVertex,
           '15',
           'past',
-          (selectionVertex) => (selectionVertex.id === vertex.id || selectionVertex.id === selectedVertex.id)
+          (selectionVertex) => (selectionVertex.id === vertex.id || selectionVertex.id === selectedVertex.id),
+          false,
+          false
         )
 
         // trigger another function for this selected vertex (for text & lines)
@@ -116,6 +118,19 @@ const svgConfigs = {
         // fn to run for other changes to happen on mouseleave (texts and lines)
         triggerFn(vertex)
       }
+    })
+  },
+  raiseAttributeLowerRest(selection, attributes = []) {
+    selection.each(function() {
+      const el = d3.select(this)
+
+      const noMatches = !attributes.every((attr) => !el.attr(attr))
+
+      if (!noMatches) {
+        return el.raise()
+      }
+
+      el.lower()
     })
   },
   raiseVertex(selection, comparisonIds = [], lowerRest = false) {
@@ -155,13 +170,15 @@ const svgConfigs = {
   activeLine(selection, hoveredVertex) {
     selection.attr('active', (edge) => (edge.source.id === hoveredVertex?.id || edge.target.id === hoveredVertex?.id) || null)
   },
-  activeText(selection, hoverVertexOrEdge, selectedVertex) {
+  activeText(selection, hoverVertexOrEdge) {
+    // trigger coming from mouseenter/mouseleave from either an edge or vertex connected to selected vertex
+    const isVertex = hoverVertexOrEdge?.sex
+
     // checking vertices
-    selection.attr('active', (vertexOrEdge) => {
-      debugger
-      if (hoverVertexOrEdge?.sex && hoverVertexOrEdge.connections.to.find(({ source: sourceId }) => sourceId === selectedVertex?.id)) {
+    selection.attr('active', (vertex) => {
+      if (isVertex && vertex?.id === hoverVertexOrEdge?.id) {
         return 'true'
-      } else if (vertexOrEdge?.source?.id === selectedVertex?.id) {
+      } else if (!isVertex && (vertex?.id === hoverVertexOrEdge?.target.id)) {
         return 'true'
       }
 
@@ -180,15 +197,6 @@ const svgConfigs = {
 
         simulation.stop()
 
-        // configsThis.radius(
-        //   selection,
-        //   selectedVertex,
-        //   '15',
-        //   'past',
-        //   (selectionVertex) => (selectionVertex.id === edge.source.id || selectionVertex.id === edge.target.id),
-        //   false // withLower
-        // )
-
         // trigger another function for this selected vertex (for text & lines)
         triggerFn(edge)
       }
@@ -200,96 +208,12 @@ const svgConfigs = {
 
         simulation.restart()
 
-        // configsThis.radius(
-        //   selection,
-        //   selectedVertex,
-        // )
-
         // trigger another function for this selected vertex (for text & lines)
         triggerFn(edge)
       }
     })
   }
 }
-
-
-// const configureEdges = (lines, circles, texts, selectedVertexId, simulation) => {
-//   lines
-//     .on('mouseenter', (d) => {
-
-//     })
-//     .on('mouseover', function (hoveredEdge) {
-//       // if edge hovered is for selected vertex
-//       if (selectedVertexId === hoveredEdge.source.id || hoveredEdge.target.id === selectedVertexId) {
-//         d3.select(this).raise()
-//       }
-//     })
-//     .on('mouseleave', (d) => {
-//       if (selectedVertexId === d.source.id || d.target.id === selectedVertexId) {
-//         simulation.restart()
-
-//         circles.attr('r', (circleD) => {
-//           if (circleD.id === selectedVertexId) {
-//             return 10
-//           }
-
-//           return 5
-//         })
-
-//         texts.attr('connected-active', null)
-//       }
-//     })
-// }
-
-// const configureVertices = (lines, circles, texts, selectedvertexId, simulation) => {
-
-//   circles
-//     .on('mouseenter', (circleVertex) => {
-//       if (circleVertex.connections.to.find(({ source: sourceId }) => sourceId === selectedVertexId)) {
-
-//         simulation.stop()
-
-//         texts
-//           .attr('connected-active', function (textD) {
-//             if (textD.id === circleVertex.id) {
-
-//               // put text on top for text belonging to vertices connexted to selected vertex
-//               d3.select(this).raise()
-
-//               return 'true'
-//             }
-
-//             return null
-//           })
-
-//         lines
-//           .attr('active', (d) => {
-//             if (d.source.id === circleVertex.id || d.target.id === circleVertex.id) {
-//               return 'true'
-//             }
-
-//             return null
-//           })
-//       }
-//     })
-//     .on('mouseleave', (circleVertex) => {
-//       if (circleVertex.connections.to.find(({ source: sourceId }) => sourceId === selectedVertexId)) {
-//         simulation.restart()
-
-//         circles.attr('r', function (circleD) {
-//           if (circleD.id === circleVertex.id) {
-//             return 10
-//           }
-
-//           return 5
-//         })
-
-//         texts.attr('connected-active', null)
-
-//         lines.attr('active', null)
-//       }
-//     })
-// }
 
 const updateEdges = (lines) => {
   lines
@@ -392,18 +316,33 @@ const Graph = ({
         onCircleMouseEnter(vertex) {
           svgConfigs.activeLine(lines, vertex)
           // on mouseenter on a vertex connected to selected vertex 
-          svgConfigs.activeText(circles, vertex, selectedVertex)
+          svgConfigs.activeText(texts, vertex)
         },
         onLineMouseEnter(edge) {
+
+          // set circle radius for vertex connected to selected vertex by edge make them bigger!
+          svgConfigs.radius(
+            circles,
+            undefined,
+            '15',
+            'past',
+            (selectionVertex) => (selectionVertex.id === edge.source.id || selectionVertex.id === edge.target.id),
+            false,
+            false
+          )
+
           // on mouseenter on an edge between a vertex and the selected vertex
-          svgConfigs.activeText(lines, edge, selectedVertex)
+          svgConfigs.activeText(texts, edge)
         },
-        onCircleMouseLeave() {
+        onCircleMouseLeave(vertex) {
           svgConfigs.activeLine(lines, null)
+
+          // on mouseenter on an edge between a vertex and the selected vertex
+          svgConfigs.activeText(texts, null)
         },
         onLineMouseLeave(edge) {
           // on mouseenter on an edge between a vertex and the selected vertex
-          svgConfigs.activeText(lines, edge, selectedVertex)
+          svgConfigs.activeText(texts, null)
         }
       }
 
@@ -431,11 +370,9 @@ const Graph = ({
         svgConfigs.mouseEnterCircle(circles, selectedVertex, simulation, actionHandlers.onCircleMouseEnter)
         svgConfigs.mouseLeaveCircle(circles, selectedVertex, simulation, actionHandlers.onCircleMouseLeave)
 
-        // // handle line events
-        // svgConfigs.mouse(circles, selectedVertex, simulation, actionHandlers.onCircleMouseEnter)
-        // svgConfigs.mouseLeaveCircle(circles, selectedVertex, simulation, actionHandlers.onCircleMouseLeave)
-
-
+        // handle line events
+        svgConfigs.mouseEnterLine(lines, selectedVertex, simulation, actionHandlers.onLineMouseEnter)
+        svgConfigs.mouseLeaveLine(lines, selectedVertex, simulation, actionHandlers.onLineMouseLeave)
       })
 
       return () => simulation.stop()
@@ -477,173 +414,3 @@ const Graph = ({
 }
 
 export default Graph
-
-// import React, { useEffect, useRef, useMemo, useState } from 'react'
-// import * as d3 from 'd3'
-// import Button from 'UI/Button/Button'
-// import Icon from '~/components/UI/Icon/Icon'
-// import styles from './styles.module.scss'
-
-// const onZoomed = function handleSvgZoom(transform) {
-//   for (let child of this.children) {
-//     child.setAttribute(
-//       'style',
-//       `transform: translateX(${transform.x}px) translateY(${transform.y}px) scale(${transform.k})`
-//     )
-//   }
-// }
-
-// const defaultConfig = {
-//   width: 1000,
-//   height: 1000,
-// }
-
-// const dragger = (simulation) => {
-//   const dragstarted = (d) => {
-//     if (!d3.event.active) simulation.alphaTarget(0.3).restart()
-//     d.fx = d.x
-//     d.fy = d.y
-//   }
-
-//   const dragged = (d) => {
-//     d.fx = d3.event.x
-//     d.fy = d3.event.y
-//   }
-
-//   const dragended = (d) => {
-//     if (!d3.event.active) simulation.alphaTarget(0)
-//     d.fx = null
-//     d.fy = null
-//   }
-
-//   return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
-// }
-
-// const updateEdges = (lines) => {
-//   lines
-//     .attr('x1', (d) => d.source.x)
-//     .attr('y1', (d) => d.source.y)
-//     .attr('x2', (d) => d.target.x)
-//     .attr('y2', (d) => d.target.y)
-// }
-
-// const updateVertices = (circles, texts) => {
-//   circles
-//     .attr('cx', (d) => d.x)
-//     .attr('cy', (d) => d.y)
-
-//   texts
-//     .attr('x', function (d) { return d.x - (this.getBBox().width / 2) })
-//     .attr('y', function (d) { return d.y - this.getBBox().height })
-// }
-
-// const getSimulation = (vertices, edges, canvasConfig, connectionDistance, connectionStrength) => d3
-//   .forceSimulation(vertices)
-//   .force(
-//     'link',
-//     d3
-//       .forceLink(edges)
-//       .distance(canvasConfig.width / connectionDistance)
-//       .id((d) => d.id)
-//   )
-//   .force('charge', d3.forceManyBody().strength(connectionStrength))
-//   .force('center', d3.forceCenter(canvasConfig.width / 2, canvasConfig.height / 2))
-//   .force(
-//     'collision',
-//     d3.forceCollide().radius((d) => d.radius)
-//   )
-
-// const Graph = ({
-//   canvasConfig = defaultConfig,
-
-//   vertices = [],
-//   edges = [],
-
-//   selectedVertex,
-
-//   setSelectedVertex,
-
-//   connectionStrength = -5,
-//   connectionDistance = 5,
-
-//   withoutZoom = false,
-// }) => {
-//   const svg = useRef()
-
-//   const [simulation, setSimulation] = useState(getSimulation(vertices, edges, canvasConfig, connectionDistance, connectionStrength))
-
-//   // handle initial creation of lines, circles and texts
-//   useEffect(() => {
-//     svg.current = d3.select('#svg')
-
-//     // setup dragging behavior for vertices & their texts
-//     const circles = svg.current
-//       .selectAll('circle')
-//       .data(vertices, (d) => d.id)
-//       .enter()
-//       .append()
-//       .call(dragger(simulation))
-//       .on('click', (d) => setSelectedVertex(d.id))
-
-//     const texts = svg.current
-//       .selectAll('text')
-//       .data(vertices, (d) => d.id)
-//       .enter()
-//       .append()
-//       .call(dragger(simulation))
-
-//     const lines = svg.current
-//       .selectAll('line')
-//       .data(edges, (d) => d.id)
-//       .enter()
-//       .append()
-
-//   }, [])
-
-
-
-
-//   // on mount set drag handler to vertices and the callback for simulation's tick to update positions of vertices and edges
-//   useEffect(() => {
-
-//     // when simulation progressses (each tick) re-renderthe edges and vertices with updated position
-//     simulation.on('tick', () => {
-
-//       // updateEdges(svg.current.selectAll('line'))
-//       // updateVertices(svg.current.selectAll('circle'),svg.current.selectAll('text'))
-//     })
-
-//     return () => simulation.stop()
-//   }, [simulation])
-
-//   // keep track of zoom without re-rendering
-//   const zoom = useRef(null)
-
-//   useEffect(() => {
-//     if (!withoutZoom) {
-//       zoom.current = d3.zoom().scaleExtent([-10, 10]).on('zoom', () => onZoomed.call(svg.current, d3.event.transform))
-
-//       svg.current.call(zoom.current).on("dblclick.zoom", null)
-//     }
-//   }, [withoutZoom])
-
-
-//   return (
-//     <div className={styles.graph}>
-//       <svg
-//         ref={svg}
-//         width={canvasConfig.width}
-//         height={canvasConfig.height}
-//         viewBox={`0 0 ${canvasConfig.width} ${canvasConfig.height}`}
-//       />
-//       {!withoutZoom && (
-//         <div className={styles.zoomController}>
-//           <Button label={<Icon icon="plus" />} onClick={() => zoom.current.scaleBy(d3.select('svg').transition().duration(750), 1.2)} />
-//           <Button label={<Icon icon="minus" />} onClick={() => zoom.current.scaleBy(d3.select('svg').transition().duration(750), 0.8)} />
-//         </div>
-//       )}
-//     </div>
-//   )
-// }
-
-// export default Graph
