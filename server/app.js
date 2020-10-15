@@ -12,7 +12,7 @@ app.use(cors())
 app.use(express.json())
 
 // get friends
-app.get('/emperia/friends', (req, res) => {
+app.get('/api/emperia/friends', (req, res) => {
   try {
     connection.query(
       'SELECT * FROM ' + process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS,
@@ -34,7 +34,7 @@ app.get('/emperia/friends', (req, res) => {
 
 
 // get connections
-app.get('/emperia/connections', (req, res) => {
+app.get('/api/emperia/connections', (req, res) => {
   try {
     connection.query(
       'SELECT * FROM ' + process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS,
@@ -55,7 +55,7 @@ app.get('/emperia/connections', (req, res) => {
 })
 
 // get friends and connections
-app.get('/emperia/data', (req, res) => {
+app.get('/api/emperia/data', (req, res) => {
   try {
     connection.query(
       `SELECT * FROM ${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_FRIENDS};
@@ -81,12 +81,12 @@ app.get('/emperia/data', (req, res) => {
   }
 })
 
-app.get('/emperia', (req, res) =>
+app.get('/api/emperia', (req, res) =>
   res.send('Hello, this is the emperia API. Nothing to look at here directly.')
 )
 
 // add friend
-app.post('/emperia/friend', (req, res) => {
+app.post('/api/emperia/friend', (req, res) => {
   try {
 
     // get friend data
@@ -134,7 +134,7 @@ app.post('/emperia/friend', (req, res) => {
 
 
 // update friend
-app.put('/emperia/friend', (req, res) => {
+app.put('/api/emperia/friend', (req, res) => {
   try {
 
     // get friend data
@@ -168,7 +168,7 @@ app.put('/emperia/friend', (req, res) => {
 })
 
 // add connection
-app.post('/emperia/connections', (req, res) => {
+app.post('/api/emperia/connections', (req, res) => {
   try {
 
     // get connections data
@@ -219,7 +219,7 @@ app.post('/emperia/connections', (req, res) => {
 })
 
 // delete friend
-app.delete('/emperia/friend', (req, res) => {
+app.delete('/api/emperia/friend', (req, res) => {
   try {
 
     const { id: friendId = null } = req.body
@@ -253,7 +253,7 @@ app.delete('/emperia/friend', (req, res) => {
 })
 
 // delete connection
-app.delete('/emperia/connections', (req, res) => {
+app.delete('/api/emperia/connections', (req, res) => {
   try {
 
     const { connectionIds = [] } = req.body

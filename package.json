@@ -48,7 +48,7 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "http://kaloyanbozhkov.com/emperia",
+  "homepage": ".",
   "devDependencies": {
     "react-app-rewired": "^2.1.6"
   },
