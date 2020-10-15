@@ -26,10 +26,11 @@ const Graph = ({
   withoutMountingAnimation,
 }) => {
   const graphWrapper = useRef()
-  
+  const fontSize = parseInt(window.getComputedStyle(document.body).fontSize)
+  const headerHeight = 4 * fontSize // 4rem at x font size eah
 
   const canvasSize = {
-    height: useWindowHeight() - 68,
+    height: useWindowHeight() - headerHeight,
     width: useWindowWidth(),
   }
 

@@ -4,7 +4,6 @@ import Button from '../UI/Button/Button'
 import styles from './styles.module.scss'
 
 const Header = ({ activeMenu = true, toggleMenu }) => {
-
   return (
     <div className={styles.header}>
       <div className={styles.logo}>
