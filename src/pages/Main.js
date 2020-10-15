@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import BaseLayout from '~/templates/BaseLayout'
 
@@ -9,18 +9,18 @@ import InfoWindow from '~/containers/InfoWindow.container'
 import Menu from '~/components/Menu/Menu'
 import useWindowWidth from '~/hooks/useWindowWidth'
 
-const Main = ({ ...graphProps }) => {
+const Main = ({ activeMenu, onToggleMenu, ...graphProps }) => {
   const windowWidth = useWindowWidth()
-  const [activeMenu, toggleMneu] = useState()
+  const isDesktop = windowWidth > 850
 
   useEffect(() => {
-    toggleMneu(windowWidth > 850)
-  }, [windowWidth])
+    onToggleMenu(isDesktop)
+  }, [isDesktop, onToggleMenu])
 
   return (
     <BaseLayout
-      Header={<Header activeMenu={activeMenu} toggleMenu={toggleMneu} />}
-      Menu={<Menu />}
+      Header={<Header activeMenu={activeMenu} toggleMenu={onToggleMenu} />}
+      Menu={<Menu isMobile={!isDesktop} />}
       InfoWindow={<InfoWindow />}
       activeMenu={activeMenu} 
     >

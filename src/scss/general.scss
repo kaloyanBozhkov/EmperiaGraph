@@ -39,6 +39,10 @@ html, body, #root, .App {
   html {
    font-size: 14px;
   }
+
+  button { 
+    font-size: .8rem 
+  }
  }
 
  @media screen and (max-width:650px) {

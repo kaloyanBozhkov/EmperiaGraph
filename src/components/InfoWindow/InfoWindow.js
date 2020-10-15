@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import styles from './styles.module.scss'
+
 import Icon from 'UI/Icon/Icon'
 import Button from 'UI/Button/Button'
 import Overlay from 'UI/Overlay/Overlay'
+
+import useWindowHeight from '~/hooks/useWindowHeight'
 
 const getUnknownFriends = (allFriends, currentFriends, excludeId) => allFriends.filter(({ id }) => !currentFriends.includes(id) && excludeId !== id)
 const getCurrentFriendIds = (currentFriends) => currentFriends.map(({ target: id }) => id)
@@ -18,6 +21,8 @@ const InfoWindow = ({
     editFriend = (f) => f
 }) => {
     const [showActions, setShowActions] = useState(false)
+    const windowHeight = useWindowHeight()
+    const isMobileLandscape = windowHeight < 500
 
     // if friend not selected, do not show info window
     if (!selectedFriend) {
@@ -42,18 +47,22 @@ const InfoWindow = ({
     return (
         <>
             <div className={styles.infoWindow}>
+
                 <div className={styles.heading}>
                     <p>{firstName} {lastName}</p>
                     <div className={styles.closeIcon} onClick={clearSelectedFriend}>
                         <Icon icon="close" />
                     </div>
                 </div>
-                <h3>- General -</h3>
-                <p>Sex: <b>{sex}</b></p>
-                <p>Facebook friends: <b>{totalFriends}</b></p>
-                <h3>- Emperia -</h3>
-                <p>Friends with: {<b>{connections.from.length}</b> || '-'}</p>
-                <p>Befriended by: {<b>{connections.to.length}</b> || '-'}</p>
+               {((isMobileLandscape && !showActions) || !isMobileLandscape)&& <div className={styles.friendInfo}>
+                    <h3>- General -</h3>
+                    <p>Sex: <b>{sex}</b></p>
+                    <p>Facebook friends: <b>{totalFriends}</b></p>
+                    <h3>- Emperia -</h3>
+                    <p>Friends with: {<b>{connections.from.length}</b> || '-'}</p>
+                    <p>Befriended by: {<b>{connections.to.length}</b> || '-'}</p>
+                </div>}
+
                 {isLoading ? (
                     <Overlay loadingMsg="Please wait...">
                         {Actions}

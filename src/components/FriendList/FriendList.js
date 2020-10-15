@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styles from './styles.module.scss'
 import Input from '../UI/Input/Input'
 
-const FriendList = ({ selectedFriend, friends = [], modifier = '', onSelect = f => f }) => {
+const FriendList = ({ selectedFriend, friends = [], modifier = '', isMobileMenu = false, onCloseMenu = (f) => f, onSelect = (f) => f }) => {
   const [search, setSearch] = useState('')
 
   return (
@@ -30,7 +30,12 @@ const FriendList = ({ selectedFriend, friends = [], modifier = '', onSelect = f 
                   !~lastName.toLowerCase().indexOf(theSearch)) ||
                 undefined
               }
-              onClick={() => onSelect({ friendId: id, selected: isSelected })}
+              onClick={() => {
+                onSelect({ friendId: id, selected: isSelected })
+
+                // close the menu if on mobile && list is in menu & not modal
+                if (isMobileMenu) onCloseMenu(false)
+              }}
             >
               <p>{firstName}</p>
               <p>{lastName}</p>

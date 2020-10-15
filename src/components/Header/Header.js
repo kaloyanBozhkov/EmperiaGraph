@@ -12,7 +12,7 @@ const Header = ({ activeMenu = true, toggleMenu }) => {
         <h3>(v0.0.1)</h3>
       </div>
       <div className={styles.btnWrapper}>
-        <Button icon={activeMenu ? 'close' : 'bars'} modifier="blank" onClick={() => toggleMenu(b => !b)} />
+        <Button icon={activeMenu ? 'close' : 'bars'} modifier="blank" onClick={() => toggleMenu(!activeMenu)} />
       </div>
     </div>
   )
