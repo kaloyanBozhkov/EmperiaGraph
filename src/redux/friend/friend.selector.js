@@ -21,25 +21,14 @@ export const getPurifiedConnections = createSelector(
 
         // if friend is selected, remove connections connecting to selected friend from other friends that the selected friend is already connected to
         if (selectedFriend) {
-            // const justTargetIDs = selectedFriend.connections.from.map(({ target }) => target)
+            
+            // get list of IDs of friends that have befriended the selected friend
+            const befriendedBy = selectedFriend.connections.to
+                .filter(({ target, source }) => target === selectedFriend.id && source !== selectedFriend.id)
+                .map(({ source }) => source)
 
-            // // 2 way friendships to get rid of during selection
-            // const twoWayFriendships = selectedFriend.connections.to.filter(({ source }) => justTargetIDs.includes(source))
-
-            // const justSourceIDs = twoWayFriendships.map(({ source }) => source)
-
-            // return connections.filter(({ source }) => !justSourceIDs.includes(source))
-
-
-            /* COOL HERE */
-            const justTargetIDs = selectedFriend.connections.from.map(({ target }) => target)
-
-            // 2 way friendships to get rid of during selection
-            const twoWayFriendships = selectedFriend.connections.to.filter(({ source }) => justTargetIDs.includes(source))
-
-            const justSourceIDs = twoWayFriendships.map(({ source }) => source)
-
-            return connections.filter(({ source }) => !justSourceIDs.includes(source))
+            // return one way connections for selected friend
+            return connections.filter(({ source }) => !befriendedBy.includes(source))
         }
 
         return connections

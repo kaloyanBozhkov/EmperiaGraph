@@ -3,7 +3,6 @@ const connection = require('./helpers/setupConnection')
 const cors = require('cors')
 const formatEdges = require('./helpers/formatEdges')
 const formatFriends = require('./helpers/formatFriends')
-const purifyConnections = require('./helpers/purifyConnections')
 
 const app = express()
 
@@ -69,7 +68,6 @@ app.get('/emperia/data', (req, res) => {
           const [friends, connections] = results
           const formattedConnections = formatEdges(connections, friends)
           const formattedFriends = formatFriends(friends, formattedConnections)
-          // const connectionsFormatted = purifyConnections(formattedFriends)
 
           res.json({
             connections: formattedConnections,

@@ -87,6 +87,8 @@ const svgConfigs = {
       // if vertex is connected to selected vertex (and that is obv set first hah)
       if (selectedVertex && vertex.connections.to.find(({ source: sourceId }) => sourceId === selectedVertex?.id)) {
 
+        // if not the selected vertex, stop animation.. this allows for drag to continue!
+        if (selectedVertex.id !== vertex.id)
         simulation.stop()
 
         // trigger another function for this selected vertex (for text & lines)
