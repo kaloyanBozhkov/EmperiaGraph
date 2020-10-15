@@ -6,7 +6,11 @@ const useWindowWidth = () => {
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth)
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    window.addEventListener('orientationchange', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('orientationchange', handleResize)
+    }
   }, [])
 
   return width
