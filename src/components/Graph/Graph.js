@@ -46,7 +46,7 @@ const svgConfigs = {
   sex(selection) {
     return selection.attr('sex', (vertex) => vertex.sex)
   },
-  radius(selection, selectedVertex, activeVertexRadius = 10, inactiveVertexRadius = 5, customCheck = false, withLower = true, withRaise = true) {
+  radius(selection, selectedVertex, activeVertexRadius = 8, inactiveVertexRadius = 5, customCheck = false, withLower = true, withRaise = true, withBiggerSelectedVertex = true) {
     return selection.attr('r', function (vertex) {
 
       const elSel = d3.select(this)
@@ -58,6 +58,7 @@ const svgConfigs = {
       if (isActive) {
         if (withRaise) elSel.raise()
 
+        if (withBiggerSelectedVertex && vertex.id === selectedVertex?.id) return +activeVertexRadius + 2
         return activeVertexRadius
       }
 
@@ -82,23 +83,11 @@ const svgConfigs = {
     })
   },
   mouseEnterCircle(selection, selectedVertex, simulation, triggerFn = (f) => f) {
-    const configsThis = this
-
     selection.on('mouseenter', function (vertex) {
       // if vertex is connected to selected vertex (and that is obv set first hah)
       if (selectedVertex && vertex.connections.to.find(({ source: sourceId }) => sourceId === selectedVertex?.id)) {
 
         simulation.stop()
-
-        configsThis.radius(
-          selection,
-          selectedVertex,
-          '15',
-          'past',
-          (selectionVertex) => (selectionVertex.id === vertex.id || selectionVertex.id === selectedVertex.id),
-          false,
-          false
-        )
 
         // trigger another function for this selected vertex (for text & lines)
         triggerFn(vertex)
@@ -106,69 +95,35 @@ const svgConfigs = {
     })
   },
   mouseLeaveCircle(selection, selectedVertex, simulation, triggerFn = (f) => f) {
-    const configsThis = this
-
     selection.on('mouseleave', (vertex) => {
       // if vertex is connected to selected vertex
       if (selectedVertex && vertex.connections.to.find(({ source: sourceId }) => sourceId === selectedVertex.id)) {
         simulation.restart()
-
-        configsThis.radius(selection, selectedVertex)
 
         // fn to run for other changes to happen on mouseleave (texts and lines)
         triggerFn(vertex)
       }
     })
   },
-  raiseAttributeLowerRest(selection, attributes = []) {
-    selection.each(function() {
+  activeLine(selection, hoveredVertexOrEdge, withRaise = true, withLower = true) {
+    // trigger coming from mouseenter/mouseleave from either an edge or vertex connected to selected vertex
+    const isVertex = hoveredVertexOrEdge?.sex
+
+    selection.attr('active', function (edge) {
       const el = d3.select(this)
 
-      const noMatches = !attributes.every((attr) => !el.attr(attr))
-
-      if (!noMatches) {
-        return el.raise()
+      // hovered a vertex
+      if (isVertex && (edge?.source.id === hoveredVertexOrEdge?.id || edge?.target.id === hoveredVertexOrEdge?.id)) {
+        if (withRaise) el.raise()
+        return 'true'
+      } else if (!isVertex && edge?.id === hoveredVertexOrEdge?.id){ // hovered an edge
+        if (withRaise) el.raise()
+        return 'true'
       }
 
-      el.lower()
+      if (withLower) el.lower()
+      return null
     })
-  },
-  raiseVertex(selection, comparisonIds = [], lowerRest = false) {
-    selection.each(function (vertex) {
-      const selected = d3.select(this)
-      if (comparisonIds.includes(vertex.id)) selected.raise()
-      if (lowerRest) selected.lower()
-    })
-  },
-  lowerVertex(selection, comparisonIds = [], raiseRest = false) {
-    selection.each(function (vertex) {
-      const selected = d3.select(this)
-      if (comparisonIds.includes(vertex.id)) selected.lower()
-      if (raiseRest) selected.raise()
-    })
-  },
-
-  // @TODO needed raise?
-  raiseLine(selection, comparisonIds = [], lowerRest = false) {
-    selection.each(function (edge) {
-      const selected = d3.select(this)
-      if (comparisonIds.includes(edge.source.id) ||
-        comparisonIds.includes(edge.target.id)) selected.raise()
-      if (lowerRest) selected.lower()
-    })
-  },
-
-  // @TODO needed lower?
-  lowerLine(selection, comparisonIds = [], raiseRest = false) {
-    selection.each(function (edge) {
-      const selected = d3.select(this)
-      if (comparisonIds.includes(edge.source.id) ||
-        comparisonIds.includes(edge.target.id)) selected.lower()
-      if (raiseRest) selected.raise()
-    })
-  },
-  activeLine(selection, hoveredVertex) {
-    selection.attr('active', (edge) => (edge.source.id === hoveredVertex?.id || edge.target.id === hoveredVertex?.id) || null)
   },
   activeText(selection, hoverVertexOrEdge) {
     // trigger coming from mouseenter/mouseleave from either an edge or vertex connected to selected vertex
@@ -181,12 +136,12 @@ const svgConfigs = {
       } else if (!isVertex && (vertex?.id === hoverVertexOrEdge?.target.id)) {
         return 'true'
       }
-
+      
       return null
     })
   },
   selectedLine(selection, selectedVertex) {
-    selection.attr('selected', (edge) => (edge.source.id === selectedVertex?.id || null))
+    selection.attr('selected', (edge) => edge.source.id === selectedVertex?.id || null)
   },
   lineWidth(selection, selectedVertex) {
     selection.attr('stroke-width', (edge) => edge.source.id === selectedVertex?.id ? edge.weight : 1)
@@ -212,7 +167,20 @@ const svgConfigs = {
         triggerFn(edge)
       }
     })
-  }
+  },
+  raiseAttributeLowerRest(selection, attributes = []) {
+    selection.each(function () {
+      const el = d3.select(this)
+      
+      const matches = attributes.some((attr) => !!el.attr(attr))
+
+      if (matches) {
+        return el.raise()
+      }
+
+      el.lower()
+    })
+  },
 }
 
 const updateEdges = (lines) => {
@@ -293,13 +261,15 @@ const Graph = ({
   }, [simulation])
 
 
-  const edgesNodes = useMemo(() => edges.map((edge) => (<line key={edge.id} />)), [edges, selectedVertex])
+  const edgesNodes = useMemo(() => edges.map((edge) => (<line key={edge.id} />)), [edges])
 
   // on mount set drag handler to vertices and the callback for simulation's tick to update positions of vertices and edges
   useEffect(() => {
     if (edgesRef.current && verticesRef.current && simulation) {
 
       const verticesG = d3.select(verticesRef.current)
+      const edgesG = d3.select(edgesRef.current)
+
       // setup dragging behavior for vertices & their texts
       verticesG
         .selectAll('circle').call(dragger(simulation))
@@ -309,16 +279,41 @@ const Graph = ({
 
       const circles = verticesG.selectAll('circle').data(vertices)
       const texts = verticesG.selectAll('text').data(vertices)
-      const lines = d3.select(edgesRef.current).selectAll('line').data(edges)
+      const lines = edgesG.selectAll('line').data(edges)
 
       // declare outside of tick fn so to save some memory
       const actionHandlers = {
         onCircleMouseEnter(vertex) {
-          svgConfigs.activeLine(lines, vertex)
+          
+          svgConfigs.activeLine(lines, vertex, false, false)
+
+          svgConfigs.raiseAttributeLowerRest(lines, ['active'])
+
           // on mouseenter on a vertex connected to selected vertex 
           svgConfigs.activeText(texts, vertex)
+          svgConfigs.raiseAttributeLowerRest(texts, ['active'])
+
+          svgConfigs.radius(
+            circles,
+            selectedVertex,
+            '15',
+            'past',
+            (selectionVertex) => (selectionVertex.id === vertex.id || selectionVertex.id === selectedVertex.id),
+            false,
+            true,
+            false
+          )
+
         },
         onLineMouseEnter(edge) {
+
+          svgConfigs.activeLine(lines, edge, false, false)
+          svgConfigs.raiseAttributeLowerRest(lines, ['active'])
+
+          // on mouseenter on an edge between a vertex and the selected vertex
+          svgConfigs.activeText(texts, edge)
+          svgConfigs.raiseAttributeLowerRest(texts, ['active'])
+
 
           // set circle radius for vertex connected to selected vertex by edge make them bigger!
           svgConfigs.radius(
@@ -327,22 +322,27 @@ const Graph = ({
             '15',
             'past',
             (selectionVertex) => (selectionVertex.id === edge.source.id || selectionVertex.id === edge.target.id),
-            false,
+            true,
+            true,
             false
           )
 
-          // on mouseenter on an edge between a vertex and the selected vertex
-          svgConfigs.activeText(texts, edge)
         },
         onCircleMouseLeave(vertex) {
-          svgConfigs.activeLine(lines, null)
+          svgConfigs.activeLine(lines, null, false, false)
 
-          // on mouseenter on an edge between a vertex and the selected vertex
           svgConfigs.activeText(texts, null)
+          // svgConfigs.raiseAttributeLowerRest(texts, ['active'])
+
+          svgConfigs.radius(circles, selectedVertex)
         },
         onLineMouseLeave(edge) {
-          // on mouseenter on an edge between a vertex and the selected vertex
+          svgConfigs.activeLine(lines, null, false, false)
+
           svgConfigs.activeText(texts, null)
+          // svgConfigs.raiseAttributeLowerRest(texts, ['active'])
+
+          svgConfigs.radius(circles, selectedVertex)
         }
       }
 
@@ -356,7 +356,7 @@ const Graph = ({
 
         // handle circes attributes
         svgConfigs.sex(circles)
-        svgConfigs.radius(circles, selectedVertex, 10, 5, false, false, false)
+        svgConfigs.radius(circles, selectedVertex, 8, 5, false, false, false)
         svgConfigs.friend(circles, selectedVertex)
 
         // handle texts attributes

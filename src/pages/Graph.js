@@ -23,9 +23,10 @@ const Graph = ({
   connectionDistance,
   changeConnectionDistance,
 
-  withoutMountingAnimation
+  withoutMountingAnimation,
 }) => {
   const graphWrapper = useRef()
+  
 
   const canvasSize = {
     height: useWindowHeight() - 68,
@@ -35,6 +36,7 @@ const Graph = ({
   const vertices = JSON.parse(JSON.stringify(friends))
   const edges = JSON.parse(JSON.stringify(connections))
 
+   
   return (
     <div className={[styles.main, withoutMountingAnimation ? styles.withoutMountingAnimation : undefined].join(' ').trim()} ref={graphWrapper}>
       <GraphComponent

@@ -7,13 +7,16 @@ import { getPurifiedConnections, getSelectedFriendData } from '~/redux/friend/fr
 import { setConnectionDistance, setConnectionStrength } from '~/redux/graph/graph.actions'
 
 import Graph from '~/pages/Graph'
+import RequestError from '~/components/RequestError/RequestError'
 
 import withComponentLoading from '~/hoc/withComponentLoading'
+import withError from '~/hoc/withError'
 
 const mapStateToProps = (state) => ({
   selectedFriend: getSelectedFriendData(state),
   friends: state.requestReducer.friends,
   connections: getPurifiedConnections(state),
+  error: state.requestReducer.error,
   isLoading: state.requestReducer.isPending,
   loadingMsg: 'Loading..',
   connectionStrength: state.graphReducer.connectionStrength,
@@ -32,5 +35,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  withComponentLoading
+  withComponentLoading,
+  withError(RequestError)
 )(Graph)

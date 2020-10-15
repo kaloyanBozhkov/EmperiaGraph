@@ -1,4 +1,4 @@
-@namespace inkscape "http://www.inkscape.org/namespaces";
+@namespace inkscape 'http://www.inkscape.org/namespaces';
 
 .zoomController {
     display: flex;
@@ -19,13 +19,13 @@
         cursor: pointer;
         stroke-width: 1.5px;
         stroke: white;
-        
+
         &[sex='male'] {
-            fill: #588BAE;
+            fill: #588bae;
         }
 
         &[sex='female'] {
-            fill: #FE7F9D;
+            fill: #fe7f9d;
         }
         &[friend='selected'],
         &[friend='connected'],
@@ -40,7 +40,6 @@
     text {
         transition: font-size 400ms;
 
-
         &[friend='default'] {
             font-size: 0.6rem;
             opacity: 0.45;
@@ -48,7 +47,7 @@
         &[friend='selected'] {
             font-size: 1rem;
             font-weight: bolder;
-            opacity: 1;
+            opacity: 0.65;
         }
         &[friend='connected'] {
             font-size: 0.7rem;
@@ -62,8 +61,8 @@
 
         // hover on a line or node
         &[active='true'] {
-            transform: translateY(-10px) translateX(-15px);
-            font-size: 1rem;
+            font-size: 2rem;
+            transform: translateY(-15px);
             font-weight: bolder;
             opacity: 1;
             fill: white;
@@ -72,6 +71,7 @@
             stroke-opacity: 0.75;
             stroke-linecap: round;
         }
+
         -webkit-touch-callout: none; /* iOS Safari */
         -webkit-user-select: none; /* Safari */
         -khtml-user-select: none; /* Konqueror HTML */
@@ -92,6 +92,10 @@
             &[active] {
                 stroke: rgb(0, 0, 0);
             }
+        }
+
+        &[active] {
+            //transform: scale(1.1)
         }
     }
 }

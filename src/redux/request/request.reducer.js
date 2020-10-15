@@ -26,14 +26,30 @@ const setFormattedData = (state, formattedData) => ({
 
 const setData = (state, { operation, payload, ...otherProps }) => {
   switch (operation) {
-    case 'DELETE_FRIEND':
+    case 'DELETE_FRIEND': {
+      const friendsWithoutRemoveFriend = state.friends.filter(({ id }) => id !== payload.friendId)
+
+      // remove id of removed friend from friends[..].connections.to and .from
+      const purifiedFriends = friendsWithoutRemoveFriend.map((friend) => {
+        const newTo = friend.connections.to.filter(({ source, target }) => source !== payload.friendId && target !== payload.friendId)
+        const newFrom = friend.connections.from.filter(({ source, target }) => source !== payload.friendId && target !== payload.friendId)
+        return {
+          ...friend,
+          connetions: {
+            to: newTo,
+            from: newFrom
+          }
+        }
+      })
+
       // if delete, update local state to exclude the deleted firend
       return {
         ...state,
-        friends: state.friends.filter(({ id }) => id !== payload.friendId),
-        connections: state.connections.filter(({ source, target }) => source.id !== payload.friendId && target.id !== payload.friendId),
+        friends: purifiedFriends,
+        connections: state.connections.filter(({ source, target }) => source !== payload.friendId && target !== payload.friendId),
         isPending: false,
       }
+    }
     case 'CREATE_FRIEND':
       //if create, update local state to include the newly created firend
       return {
@@ -53,7 +69,7 @@ const setData = (state, { operation, payload, ...otherProps }) => {
             from: friend.connections.from.filter(({ id }) => !payload.connectionIds.includes(id))
           }
         }) : friend),
-          isPending: false
+        isPending: false
       }
     case 'UPDATE_FRIEND':
       return {
@@ -112,7 +128,7 @@ const dashboardReportsReducer = (state = initialState, { type, payload } = {}) =
       return setFormattedData(state, { connections: payload })
     case REQUEST_FORMATTED_DATA_SUCCESS:
       return setFormattedData(state, payload)
-    default: 
+    default:
       return state
   }
 }
