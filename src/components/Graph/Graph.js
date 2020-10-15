@@ -221,13 +221,12 @@ const Graph = ({
 }) => {
   const edgesRef = useRef()
   const verticesRef = useRef()
-
   const canvas = useRef()
   const zoom = useRef(null)
 
   const simulation = useMemo(() => {
     if (!edges || !vertices) return null
-
+    
     return (
       d3
         .forceSimulation(vertices)

@@ -1,7 +1,4 @@
 @import 'variables';
-@import 'keyframes';
-@import 'mixins';
-
 .menu {
     z-index: 1;
     background: white;
@@ -10,10 +7,10 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    transition: .3s;
 
     > p {
         display: flex;
     }
 
-    @include animate(slideRight, 0.9s);
 }

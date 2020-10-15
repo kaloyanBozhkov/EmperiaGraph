@@ -69,10 +69,10 @@ app.get('/emperia/data', (req, res) => {
           const [friends, connections] = results
           const formattedConnections = formatEdges(connections, friends)
           const formattedFriends = formatFriends(friends, formattedConnections)
-          const connectionsFormatted = purifyConnections(formattedFriends)
+          // const connectionsFormatted = purifyConnections(formattedFriends)
 
           res.json({
-            connections: connectionsFormatted,
+            connections: formattedConnections,
             friends: formattedFriends
           })
         }

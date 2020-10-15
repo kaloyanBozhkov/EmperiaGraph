@@ -1,13 +1,19 @@
 import React from 'react'
+import Button from '../UI/Button/Button'
 
 import styles from './styles.module.scss'
 
-const Header = () => {
+const Header = ({ activeMenu = true, toggleMenu }) => {
+
   return (
     <div className={styles.header}>
-      <h1>EmperiaGraph</h1>
-
-      <h3>v0.0.1</h3>
+      <div className={styles.logo}>
+        <h1>EmperiaGraph</h1>
+        <h3>(v0.0.1)</h3>
+      </div>
+      <div className={styles.btnWrapper}>
+        <Button icon={activeMenu ? 'close' : 'bars'} modifier="blank" onClick={() => toggleMenu(b => !b)} />
+      </div>
     </div>
   )
 }

@@ -43,4 +43,10 @@
   }
 
   @include customModalModifiers();
+
+  @media screen and (max-width:850px) {
+    max-width: 90%;
+    overflow: hidden;
+    min-width: 70%;
+  }
 }
