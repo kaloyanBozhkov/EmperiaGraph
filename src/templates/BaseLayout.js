@@ -5,7 +5,7 @@ const BaseLayout = ({ Header, Menu, InfoWindow, activeMenu, children }) => {
   return (
     <div className={styles.baseLayout}>
       <header>{Header}</header>
-      <nav open={activeMenu ? 'yes' : 'no'}>{Menu}</nav>
+      <nav data-open={activeMenu ? 'yes' : 'no'}>{Menu}</nav>
       <main>{children}</main>
       {InfoWindow && <section className={styles.infoWindowWrapper}>{InfoWindow}</section>}
     </div>

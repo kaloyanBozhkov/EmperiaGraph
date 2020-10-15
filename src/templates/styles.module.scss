@@ -21,10 +21,10 @@
     width: 20rem;
     z-index: 1;
 
-    &[open='yes'] {
+    &[data-open='yes'] {
       @include animate(slideRight, 0.9s);
     }
-    &[open='no'] {
+    &[data-open='no'] {
       @include animate(slideLeft, 0.9s);
     }
   }

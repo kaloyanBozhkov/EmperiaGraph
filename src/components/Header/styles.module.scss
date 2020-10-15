@@ -11,7 +11,7 @@
 
     .logo {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         h1,
         h3 {
             color: white;
@@ -23,11 +23,12 @@
             padding: 0 .2rem;
             font-size: 0.5rem;
             display: flex;
-            height: 1rem;
             margin-top: 2rem;
+            line-height:3rem;
         }
 
         h1 {
+            line-height: 4rem;
             padding-left: 1rem;
         }
     }

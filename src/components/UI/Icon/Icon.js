@@ -9,7 +9,9 @@ import {
   faPlus,
   faMinus,
   faBars,
-  faUser
+  faUser, 
+  faTrash,
+  faEdit
 } from '@fortawesome/free-solid-svg-icons'
 
 const Icon = ({ icon }) => {
@@ -28,6 +30,10 @@ const Icon = ({ icon }) => {
       return <FontAwesomeIcon icon={faBars} />
     case 'user':
       return <FontAwesomeIcon icon={faUser} />
+    case 'delete':
+      return <FontAwesomeIcon icon={faTrash} />
+    case 'edit':
+      return <FontAwesomeIcon icon={faEdit} />
     default:
       return <i>Icon not found</i>
   }
