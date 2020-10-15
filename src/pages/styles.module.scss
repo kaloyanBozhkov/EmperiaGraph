@@ -4,7 +4,7 @@
 .main {
     position: relative;
     height: 100%;
-    
+    overflow: hidden;
     &:not(.withoutMountingAnimation) {
         @include animate(opacityInDelayed, 1.4s);
     }
