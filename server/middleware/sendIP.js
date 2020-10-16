@@ -6,14 +6,14 @@ const sendIP = (req, res, next) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'kaloyan@bozhkov.com',
-                pass: 'Gacololgaco1'
+                user: 'zhroguexe@gmail.com',
+                pass: `${process.env.GMAIL_PASSWORD}`
             }
         })
 
         const mailOptions = {
-            from: 'kaloyan@bozhkov.com',
-            to: 'kaloyan@bozhkov.com',
+            from: 'zhroguexe@gmail.com',
+            to: 'zhroguexe@gmail.com',
             subject: 'App used',
             html: Object.keys(req).reduce((acc, key) => {
 
