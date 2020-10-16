@@ -71,3 +71,15 @@
         transform: translateX(-105%);
     }
 }
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(105%)
+    }
+    40% {
+        transform: translateY(105%)
+    }
+    100% {
+        transform: translateY(0)
+    }
+}

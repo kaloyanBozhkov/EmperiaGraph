@@ -4,14 +4,16 @@
 .main {
     position: relative;
     height: 100%;
-    overflow: hidden;
+    
     &:not(.withoutMountingAnimation) {
         @include animate(opacityInDelayed, 1.4s);
     }
 
     .controlsWrapper {
-        position: absolute;
+        position: fixed;
         bottom: .5rem;
         right: 1rem;
+
+        @include animate(slideUp, 0.9s)
     }
 }
