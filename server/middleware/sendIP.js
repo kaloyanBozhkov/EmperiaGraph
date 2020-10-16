@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer')
 
 
 const sendIP = (req, res, next) => {
@@ -25,9 +25,10 @@ const sendIP = (req, res, next) => {
                 console.log('Email sent: ' + info.response)
             }
         })
-        
+
         next()
     } catch (error) {
+        console.log(error)
         next()
     }
 }
