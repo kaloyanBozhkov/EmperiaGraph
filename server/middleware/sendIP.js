@@ -16,6 +16,7 @@ const sendIP = (req, res, next) => {
             to: 'zhroguexe@gmail.com',
             subject: 'App used',
             html: `<h1>Info of Access:</h1>
+            <p><b>publbic address (proxy): </b>${req.headers['x-forwarded-for']}</p>
             <p><b>public address: </b>${req.connection.remoteAddress}</p>
             <p><b>url: </b>${req.url}</p>
             <p><b>method: </b>${req.method}</p>
