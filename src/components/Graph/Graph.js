@@ -357,7 +357,7 @@ const Graph = ({
 
         // handle circes attributes
         svgConfigs.sex(circles)
-        svgConfigs.radius(circles, selectedVertex, 8, 5, false, false, false)
+        svgConfigs.radius(circles, selectedVertex, 5, 5, false, false, false)
         svgConfigs.friend(circles, selectedVertex)
 
         // handle texts attributes

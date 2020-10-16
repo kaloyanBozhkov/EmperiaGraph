@@ -21,7 +21,7 @@ export const getPurifiedConnections = createSelector(
 
         // if friend is selected, remove connections connecting to selected friend from other friends that the selected friend is already connected to
         if (selectedFriend) {
-            
+
             // get list of IDs of friends that have befriended the selected friend
             const befriendedBy = selectedFriend.connections.to
                 .filter(({ target, source }) => target === selectedFriend.id && source !== selectedFriend.id)
@@ -32,5 +32,14 @@ export const getPurifiedConnections = createSelector(
         }
 
         return connections
+    }
+)
+
+export const getMissingFriendsDataCount = createSelector(
+    [getFriends],
+    (friends) => {
+        const missingFriendsData = friends.filter(({ connections: { from } }) => from.length === 0)
+
+        return missingFriendsData.length
     }
 )

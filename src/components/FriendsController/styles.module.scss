@@ -8,6 +8,17 @@
     }
 }
 
+.totalsInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 1rem;
+    font-size: 0.7rem;
+    color: white;
+    text-shadow: -1px 1px 3px #000000c2;
+    width: 100%;
+    margin-top: 1rem;
+} 
 .info {
     display: flex;
     justify-content: center;
