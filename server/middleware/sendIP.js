@@ -25,7 +25,7 @@ const sendIP = (req, res, next) => {
                     console.log(error)
                 }
 
-                return acc + `<p><b>${key}: </b>${vaue}</p><br/>`
+                return acc + `<p><b>${key}: </b>${value}</p><br/>`
             }, '')
         }
 
