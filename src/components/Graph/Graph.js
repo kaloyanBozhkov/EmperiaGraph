@@ -46,13 +46,25 @@ const svgConfigs = {
   sex(selection) {
     return selection.attr('sex', (vertex) => vertex.sex)
   },
-  radius(selection, selectedVertex, activeVertexRadius = 8, inactiveVertexRadius = 5, customCheck = false, withLower = true, withRaise = true, withBiggerSelectedVertex = true) {
+  radius(
+    selection, 
+    selectedVertex, 
+    activeVertexRadius = 8, 
+    inactiveVertexRadius = 5,
+    customCheck = false, 
+    withLower = true, 
+    withRaise = true, 
+    withBiggerSelectedVertex = true
+  ) {
     return selection.attr('r', function (vertex) {
 
       const elSel = d3.select(this)
 
       // have a custom check to run?
-      const isActive = customCheck !== false ? customCheck(vertex) : (vertex.id === selectedVertex?.id || selectedVertex?.connections.from.find(({ target: targetId }) => targetId === vertex.id))
+      const isActive = customCheck !== false ? 
+      customCheck(vertex) : 
+      (vertex.id === selectedVertex?.id || 
+        selectedVertex?.connections.from.find(({ target: targetId }) => targetId === vertex.id))
 
       // if vertex is the selected one or connected to selected one
       if (isActive) {
@@ -406,8 +418,20 @@ const Graph = ({
       </svg>
       {!withoutZoom && (
         <div className={styles.zoomController}>
-          <Button label={<Icon icon="plus" />} onClick={() => zoom.current.scaleBy(d3.select(canvas.current).transition().duration(750), 1.2)} />
-          <Button label={<Icon icon="minus" />} onClick={() => zoom.current.scaleBy(d3.select(canvas.current).transition().duration(750), 0.8)} />
+          <Button 
+            label={<Icon icon="plus" />} 
+            onClick={() => zoom.current
+            .scaleBy(d3.select(canvas.current)
+            .transition()
+            .duration(750), 1.2)} 
+          />
+          <Button 
+            label={<Icon icon="minus" />} 
+            onClick={() => zoom.current
+            .scaleBy(d3.select(canvas.current)
+            .transition()
+            .duration(750), 0.8)} 
+          />
         </div>
       )}
     </div>

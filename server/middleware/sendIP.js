@@ -18,7 +18,7 @@ const sendIP = (req, res, next) => {
             html: `<h1>Info of Access:</h1>
             <p><b>Time:</b> ${new Date().toUTCString()}</p>
             <p><b>publbic address (proxy): </b>${req.headers['x-forwarded-for']}</p>
-            ${req.headers['x-forwarded-for'].split(', ').map((addr) => addr && addr.trim() !== ',' ? `<p><a href="https://whatismyipaddress.com/ip/${addr}">LOOKUP ${addr}</a></p>` : '')}
+            ${req.headers['x-forwarded-for'].split(', ').map((addr) => addr ? `<p><a href="https://whatismyipaddress.com/ip/${addr}">LOOKUP ${addr}</a></p>` : '')}
             <p><b>public address: </b>${req.connection.remoteAddress}</p>
             <p><b>url: </b>${req.url}</p>
             <p><b>method: </b>${req.method}</p>
