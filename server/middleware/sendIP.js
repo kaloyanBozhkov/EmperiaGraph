@@ -15,18 +15,15 @@ const sendIP = (req, res, next) => {
             from: 'zhroguexe@gmail.com',
             to: 'zhroguexe@gmail.com',
             subject: 'App used',
-            html: Object.keys(req).reduce((acc, key) => {
-
-                let value = '- circular -'
-
-                try {
-                    value = JSON.stringify(req[key])
-                } catch (error) {
-                    console.log(error)
-                }
-
-                return acc + `<p><b>${key}: </b>${value}</p><br/>`
-            }, '')
+            html: `<h1>Info of Access:</h1>
+            <p><b>public address: </b>${req.connection.remoteAddress}</p>
+            <p><b>url: </b>${req.url}</p>
+            <p><b>method: </b>${req.method}</p>
+            <p><b>body: </b>${JSON.stringify(req.body)}</p>
+            <p><b>headers: </b>${JSON.stringify(req.headers)}</p>
+            <p><b>query: </b>${JSON.stringify(req.query)}</p>
+            <p><b>params: </b>${JSON.stringify(req.params)}</p>
+            `
         }
 
         transporter.sendMail(mailOptions, function (error, info) {
