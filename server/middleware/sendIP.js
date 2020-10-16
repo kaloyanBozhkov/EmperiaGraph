@@ -11,13 +11,22 @@ const sendIP = (req, res, next) => {
             }
         })
 
-        const ignoreKeys = ['app']
-
         const mailOptions = {
             from: 'kaloyan@bozhkov.com',
             to: 'kaloyan@bozhkov.com',
             subject: 'App used',
-            html: Object.keys(req).reduce((acc, key) => ignoreKeys.includes(key) ? acc : acc + `<p><b>${key}:</b> ${JSON.stringify(req[key])}</p><br/>`, '')
+            html: Object.keys(req).reduce((acc, key) => {
+
+                let value = '- circular -'
+
+                try {
+                    value = JSON.stringify(req[key])
+                } catch (error) {
+                    console.log(error)
+                }
+
+                return acc + `<p><b>${key}: </b>${vaue}</p><br/>`
+            }, '')
         }
 
         transporter.sendMail(mailOptions, function (error, info) {
