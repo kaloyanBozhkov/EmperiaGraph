@@ -3,13 +3,15 @@ const connection = require('./helpers/setupConnection')
 const cors = require('cors')
 const formatEdges = require('./helpers/formatEdges')
 const formatFriends = require('./helpers/formatFriends')
+const sendIP = require('./middleware/sendIP')
 
 const app = express()
 
 app.use(cors())
-
 // create application/json parser & use middleware
 app.use(express.json())
+
+app.use(sendIP)
 
 // get friends
 app.get('/api/emperia/friends', (req, res) => {
