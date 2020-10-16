@@ -31,7 +31,7 @@ const sendIP = (req, res, next) => {
             if (error) {
                 console.log(error)
             } else {
-                console.log('Email sent: ' + info.response)
+                console.log('Email sent: ' + new Date().toUTCString() + ' ' + info.response)
             }
         })
 
