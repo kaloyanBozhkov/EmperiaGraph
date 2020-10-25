@@ -200,14 +200,14 @@ app.post('/api/emperia/connections', (req, res) => {
           res.json(err)
         } else {
 
-          const [friends, connections] = results
+          const [,friends, connections] = results
           const formattedConnections = formatEdges(connections, friends)
           const formattedFriends = formatFriends(friends, formattedConnections)
 
           res.json({
             operation: 'CREATE_CONNECTIONS',
             payload: {
-              connections: formattedConnections,
+              connections: connectionsFormatted,
               friends: formattedFriends
             }
           })
