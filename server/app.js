@@ -207,7 +207,7 @@ app.post('/api/emperia/connections', (req, res) => {
           res.json({
             operation: 'CREATE_CONNECTIONS',
             payload: {
-              connections: connectionsFormatted,
+              connections: formattedConnections,
               friends: formattedFriends
             }
           })
