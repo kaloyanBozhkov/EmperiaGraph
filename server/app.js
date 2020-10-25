@@ -270,8 +270,8 @@ app.delete('/api/emperia/connections', (req, res) => {
     const sqlQuery = `DELETE FROM
       \`${process.env.REACT_APP_EMPERIA_GRAPH_TABLE_CONNECTIONS}\`
       WHERE \`id\` IN (${connectionIds.join(',')});`
-    console.log(sqlQuery)
-    // create insertion query
+
+      // create insertion query
     connection.query(
       sqlQuery,
       (err) => {
