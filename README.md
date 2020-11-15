@@ -1,1 +1,5 @@
-D3 Interactable graph with small back-end to handle data
+React + D3 based SPA with Express + MySQL
+
+Live: https://www.kaloyanbozhkov.com/emperia
+
+Demo: https://youtu.be/y5wtaMj_duw
