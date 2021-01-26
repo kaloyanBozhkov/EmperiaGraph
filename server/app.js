@@ -287,28 +287,5 @@ app.delete('/api/emperia/connections', (req, res) => {
   }
 })
 
-
-app.post('/api/emperia/endpoint', (req, res) => {
-  const { query } = req.body
-
-  try {
-    connection.query(
-      query,
-      (err, results, fields) => {
-        if (err) {
-          res.json(err)
-        } else {
-          res.json({
-            results,
-            fields,
-          })
-        }
-      }
-    )
-  } catch (error) {
-    res.json({ error: error.message })
-  }
-})
-
 app.listen(3000)
 
